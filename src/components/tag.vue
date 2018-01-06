@@ -32,7 +32,7 @@
           </md-list-item>
         </md-list>
         <md-list-form :fields="page.form"
-          :edit="edit"
+          :edit="edit && !!user"
           :level="0"
           @sub="openDialogSub"
           @plus="plusForm">
