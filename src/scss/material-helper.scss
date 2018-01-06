@@ -1,0 +1,137 @@
+// hint
+.hint {
+    /* Position the hint */
+    position: absolute;
+    left: 2px;
+    right: auto;
+    bottom: 7px;
+    /* Copy styles from ng-messages */
+    font-size: 12px;
+    line-height: 14px;
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    /* Set our own color */
+    color: grey;
+    &.chip {
+      bottom: -20px;
+    }
+}
+.hint-warn {
+    /* Position the hint */
+    position: inherit;
+    left: 2px;
+    right: auto;
+    bottom: 0px;
+    /* Copy styles from ng-messages */
+    font-size: 12px;
+    line-height: 20px !important;
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    /* Set our own color */
+    color: orange !important;
+}
+.hint.ng-hide,
+.hint.ng-enter,
+.hint.ng-leave.ng-leave-active {
+    bottom: 26px;
+    opacity: 0;
+}
+.hint.ng-leave,
+.hint.ng-enter.ng-enter-active {
+    bottom: 7px;
+    opacity: 1;
+}
+// md-chips
+.md-chips md-chip {
+    margin: 6px 4px 0 0;
+}
+.md-chip-input-container {
+  height: 1.8em;
+  width: 100%;
+}
+md-chips md-chip {
+   position: relative;
+}
+md-chips md-chip .md-chip-remove-container {
+     position: absolute;
+     right: 4px !important;
+     top: 4px;
+     margin-right: 0;
+     height: 24px; }
+md-chips md-chip .md-chip-remove-container button {
+       position: relative;
+       height: 24px;
+       width: 24px;
+       line-height: 30px;
+       text-align: center;
+       background: rgba(0, 0, 0, 0.3);
+       border-radius: 50%;
+       border: none;
+       box-shadow: none;
+       padding: 0;
+       margin: 0;
+       transition: background 0.15s linear;
+       display: block;
+ }
+md-chips md-chip .md-chip-remove-container button md-icon {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate3d(-50%, -50%, 0) scale(0.7);
+         color: white;
+         fill: white;
+}
+md-chips md-chip .md-chip-remove-container button:hover,
+md-chips md-chip .md-chip-remove-container button:focus {
+         background: rgba(255, 0, 0, 0.8);
+}
+md-chips md-chips-wrap.md-removable md-chip md-chip-template {
+   padding-right: 5px;
+}
+// md-fab
+md-fab-trigger {
+  top: 0.7em;
+}
+// md-toolbar
+md-toolbar {
+    padding: 0px !important;
+    &.main-toolbar {
+        background: inherit;
+        md-icon {
+            width: 4em;
+            height: 3.5em;
+        }
+    }
+}
+md-content {
+  background: white;
+}
+md-nav-bar {
+  .md-button.md-accent {
+    color: $highlight-color;
+  }
+  md-nav-ink-bar {
+    color: $highlight-color;
+    background-color: $highlight-color;
+  }
+}
+.md-nav-item:first-of-type {
+    margin: 0;
+}
+md-fab-toolbar md-toolbar .md-toolbar-tools {
+  @include respond-to(handhelds) { margin-top: 6px; }
+  @include respond-to(small-screens) { margin-top: 6px; }
+  @include respond-to(medium-screens) { margin-top: 10px; }
+  @include respond-to(wide-screens) { margin-top: 3px; }
+  @include respond-to(xwide-screens) { margin-top: 1px; }
+  padding: 0 0;
+}
+// md-backdrop, md-sidenav
+md-backdrop, md-sidenav {
+  position: fixed;
+}
+// https://github.com/angular/material/issues/10145
+.md-swipe-horizontal, .md-swipe-horizontal * {
+   touch-action: pan-y;
+}
+.md-swipe-vertical, .md-swipe-vertical * {
+   touch-action : pan-x;
+}

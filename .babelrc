@@ -1,0 +1,23 @@
+{
+  "presets": [
+    ["env", { "modules": false }],
+    "stage-2"
+  ],
+  "ignore":  [
+    "www/**"
+  ],
+  "plugins": [
+    "transform-runtime",
+    "transform-flow-strip-types",
+    "transform-object-rest-spread"
+  ],
+  "comments": false,
+  "env": {
+    "test": {
+      "presets": ["env", "stage-2"],
+      "plugins": [ "istanbul" ]
+    }
+  },
+  "retainLines": true,
+  "sourceMaps": "both"
+}

@@ -1,0 +1,25 @@
+language: node_js
+dist: trusty
+sudo: false
+node_js:
+  - "6"
+
+addons:
+  firefox: "57.0b4"
+
+install:
+  - npm install
+  - npm run drive:get
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
+  - nohup npm run drive &
+  - sleep 3
+  - npm run build
+  - nohup npm run serve &
+  - sleep 3
+
+script:
+  - npm test
