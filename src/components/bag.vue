@@ -11,11 +11,8 @@
       <md-card-content>
         <p v-show="!products.length"><i>Please consider adding some products to your bag</i></p>
         <md-list v-if="products.length > 0">
-          <md-list-item v-for="(p, index) in products" :key="p.id" class="bag-item">
-            <small>{{ p.title }} - <b>{{ p.price | currency }}</b> x {{ p.quantity }}</small>
-            <md-button class="md-warn" @click.native="removeFromBag(p)">
-              <md-icon md-src="close">close</md-icon>
-            </md-button>
+          <md-list-item v-for="(p, index) in products" :key="index" class="bag-item">
+            <bag-product :product="p"></bag-product>
             <md-divider v-if="index < products.length - 1"></md-divider>
           </md-list-item>
           <md-list-item>
@@ -40,8 +37,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import BagProduct from './bag-product.vue'
 
 export default {
+  name: 'Bag',
+  components: { BagProduct },
   computed: {
     ...mapGetters({
       products: 'bagProducts',
