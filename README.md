@@ -3,7 +3,7 @@
 [![Build Status][build-image]][build-url]
 
 [build-url]: https://travis-ci.com/benitogf/suit
-[build-image]: https://img.shields.io/travis/benitogf/suit/master.svg?style=flat-square
+[build-image]: https://travis-ci.com/benitogf/suit.svg?token=b628aVyTMNXTpbUCmJtn&branch=master&style=flat-square
 
 > A Vue.js project based on [vue-material](http://vuematerial.io)
 
