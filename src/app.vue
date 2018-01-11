@@ -28,7 +28,7 @@
         </router-link>
       </md-toolbar>
 
-      <md-list v-if="user">
+      <md-list v-if="user.role === 'admin'">
         <md-list-item>
           <span></span><md-switch v-model="edit" id="edit-sidenav-toggle" name="edit-sidenav-toggle"></md-switch>
         </md-list-item>
@@ -42,7 +42,7 @@
         </md-list-item>
       </md-list>
 
-      <md-list-tree :edit="edit && !!user" :tags="tags" @action="openDialog"></md-list-tree>
+      <md-list-tree :edit="edit && user.role === 'admin'" :tags="tags" @action="openDialog"></md-list-tree>
 
     </md-sidenav>
 

@@ -5,14 +5,14 @@
     <md-list-item v-for="(field, index) in fields[root]" :key="index" :class="'level'+level">
 
       <span class="label" v-html="field.id"></span>
-      <md-list-expand :edit="edit && !!user" v-if="fields[field.id] instanceof Array">
+      <md-list-expand :edit="edit && user.role === 'admin'" v-if="fields[field.id] instanceof Array">
 
-        <md-list-item class="md-list-form-plus" v-if="edit && !!user" @click="fireClickEvent({ action: 'plus', root,  id: field.id })">
+        <md-list-item class="md-list-form-plus" v-if="edit && user.role === 'admin'" @click="fireClickEvent({ action: 'plus', root,  id: field.id })">
           <md-icon md-src="tag"></md-icon>{{field.id}}
         </md-list-item>
 
         <md-list-item v-for="(item, index) in field.data" :key="index" class="md-list-form-item">
-          <quill :id="field.id + index" :edit="edit && !!user" class="quill-container"></quill>
+          <quill :id="field.id + index" :edit="edit && user.role === 'admin'" class="quill-container"></quill>
         </md-list-item>
 
         <md-list-form :edit="edit"
@@ -23,7 +23,7 @@
           :root="field.id">
         </md-list-form>
 
-        <md-list-item v-if="edit && root === 'root' && !!user" @click="fireClickEvent({ action: 'sub', id: field.id })">
+        <md-list-item v-if="edit && root === 'root' && user.role === 'admin'" @click="fireClickEvent({ action: 'sub', id: field.id })">
           <md-icon md-src="tag"></md-icon>{{field.id}}
         </md-list-item>
 
@@ -31,7 +31,7 @@
 
     </md-list-item>
 
-    <md-list-item v-if="edit && root === 'root' && !!user" @click="fireClickEvent({ action: 'sub' })">
+    <md-list-item v-if="edit && root === 'root' && user.role === 'admin'" @click="fireClickEvent({ action: 'sub' })">
       <md-icon md-src="tag"></md-icon>
     </md-list-item>
 

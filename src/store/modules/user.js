@@ -29,6 +29,7 @@ const actions = {
       .then(response => {
         credentials.token = response.data.token
         credentials.id = response.data.id
+        credentials.role = response.data.role
         commit(types.LOGIN, { credentials })
         router.push({ name: 'home' })
       })
@@ -45,7 +46,6 @@ const actions = {
   },
   async getProfile ({ commit }) {
     let response = await Vue.http.get('/api/restricted')
-    console.log(response)
     let data = response.body
     commit(types.SET_PROFILE, { data })
   },
