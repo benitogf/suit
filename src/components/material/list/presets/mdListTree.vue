@@ -18,7 +18,7 @@
 
     </md-list-item>
 
-    <md-list-item v-if="edit" v-for="(tag, index) in tags[tag]" :key="index"
+    <md-list-item v-if="edit" v-for="(tag, index) in tags[tag]" :key="index+tag"
       @click="fireClickEvent(tag)">
       <md-icon md-src="tag"></md-icon>{{tag}}
     </md-list-item>

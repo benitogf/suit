@@ -1,18 +1,21 @@
 /**
  * Mocking client-server processing
  */
+import pictures from './pictures'
+
 const _products = [
   {
     "id": 1,
-    "title": "Apple",
+    "picture": pictures.apple,
+    "name": "Apple",
     "price": 40.54,
     "basePrice": 40.54,
-    "inventory": 3,
+    "inventory": -1,
     "quantity": 1,
     "description": "just one apple.",
-    "variant": "green",
+    "var": "green",
     "bulk": "single",
-    "variants": [
+    "vars": [
       {
         "label": "green",
         "price": 40.54
@@ -37,19 +40,15 @@ const _products = [
   },
   {
     "id": 2,
-    "title": "Orange",
+    "picture": pictures.orange,
+    "name": "Orange Docen",
     "price": 120.99,
     "basePrice": 120.99,
     "inventory": 5,
     "quantity": 1,
-    "description": "Just one orange.",
-    "bulk": "single",
+    "description": "Just one docen of oranges.",
+    "bulk": "docen",
     "bulks": [
-      {
-        "label": "single",
-        "quantity": 1,
-        "factor": 1
-      },
       {
         "label": "docen",
         "quantity": 12,
@@ -59,7 +58,8 @@ const _products = [
   },
   {
     "id": 3,
-    "title": "Tomato",
+    "picture": pictures.tomato,
+    "name": "Tomato",
     "price": 19.99,
     "basePrice": 19.99,
     "inventory": 5,
@@ -68,7 +68,8 @@ const _products = [
   },
   {
     "id": 4,
-    "title": "Blueberry",
+    "picture": pictures.blueberry,
+    "name": "Blueberry",
     "price": 39.99,
     "basePrice": 39.99,
     "inventory": 1,
@@ -77,7 +78,8 @@ const _products = [
   },
   {
     "id": 5,
-    "title": "Durian",
+    "picture": pictures.durian,
+    "name": "Durian",
     "price": 19.99,
     "basePrice": 19.99,
     "inventory": 3,
@@ -86,7 +88,8 @@ const _products = [
   },
   {
     "id": 6,
-    "title": "Dragon Fruit",
+    "picture": pictures.dragon,
+    "name": "Dragon Fruit",
     "price": 19.99,
     "basePrice": 19.99,
     "inventory": 3,
@@ -95,7 +98,8 @@ const _products = [
   },
   {
     "id": 7,
-    "title": "Kiwi",
+    "picture": pictures.kiwi,
+    "name": "Kiwi",
     "price": 19.99,
     "basePrice": 19.99,
     "inventory": 3,

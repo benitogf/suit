@@ -4,7 +4,6 @@
     <md-card class="md-primary">
 
       <md-card-header>
-        <div class="md-title">Shopping Bag</div>
         <p v-show="checkoutStatus">Checkout {{ checkoutStatus }}.</p>
       </md-card-header>
 
@@ -22,9 +21,8 @@
       </md-card-content>
 
       <md-card-actions>
-        <router-link class="md-button md-default" exact to="/shop"
-          v-if="state !== 'shop'">back to shop
-        </router-link>
+        <md-button class="md-accent md-raised"
+          @click="keepShopping()">keep shopping</md-button>
         <md-button class="md-default md-raised"
           :disabled="!products.length"
           @click.native="checkout(products)">Checkout</md-button>
@@ -38,6 +36,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import BagProduct from './bag-product.vue'
+import router from '@/router'
 
 export default {
   name: 'Bag',
@@ -56,13 +55,21 @@ export default {
   },
   watch: {
     'products.length': function () {
-      this.$parent.$emit('bag')
+      this.$parent.$emit('open')
     }
   },
-  methods: mapActions([
-    'removeFromBag',
-    'checkout'
-  ])
+  methods: {
+    ...mapActions([
+      'removeFromBag',
+      'checkout'
+    ]),
+    keepShopping () {
+      this.$emit('close')
+      if (this.state !== 'shop') {
+        router.push({ name: 'shop' })
+      }
+    }
+  }
 }
 </script>
 
@@ -74,7 +81,6 @@ export default {
   }
 }
 .bag-item {
-
     padding: 0 0 0 16px;
 }
 .md-list {

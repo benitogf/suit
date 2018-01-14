@@ -25,14 +25,14 @@
       </md-card-area>
 
       <md-card-content v-if="page && page.form">
-        <md-list v-if="user">
+        <md-list v-if="isAdmin">
           <md-list-item>
             <span></span>
             <md-switch v-model="edit"></md-switch>
           </md-list-item>
         </md-list>
         <md-list-form :fields="page.form"
-          :edit="edit && user.role === 'admin'"
+          :edit="edit && isAdmin"
           :level="0"
           @sub="openDialogSub"
           @plus="plusForm">
@@ -55,7 +55,8 @@ export default {
   computed: {
     ...mapGetters({
       user: 'currentUser',
-      profile: 'profile'
+      profile: 'profile',
+      isAdmin: 'isAdmin'
     })
   },
   data: () => ({
