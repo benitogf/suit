@@ -11,7 +11,7 @@
         <p v-show="!products.length"><i>Please consider adding some products to your bag</i></p>
         <md-list v-if="products.length > 0">
           <md-list-item v-for="(p, index) in products" :key="index" class="bag-item">
-            <bag-product :product="p"></bag-product>
+            <bag-product @open="open()" :product="p"></bag-product>
             <md-divider v-if="index < products.length - 1"></md-divider>
           </md-list-item>
           <md-list-item>
@@ -55,7 +55,7 @@ export default {
   },
   watch: {
     'products.length': function () {
-      this.$parent.$emit('open')
+      this.open()
     }
   },
   methods: {
@@ -68,6 +68,9 @@ export default {
       if (this.state !== 'shop') {
         router.push({ name: 'shop' })
       }
+    },
+    open () {
+      this.$emit('open')
     }
   }
 }

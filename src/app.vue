@@ -46,7 +46,7 @@
 
     </md-sidenav>
 
-    <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav" @bag="open('right')">
+    <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav">
 
       <md-toolbar class="md-right-close">
         <div class="md-title">Shopping Bag</div>
@@ -57,7 +57,7 @@
         </md-layout>
       </md-toolbar>
 
-      <bag @close="close('right')"></bag>
+      <bag @close="close('right')" @open="open('right')"></bag>
 
     </md-sidenav>
 
@@ -140,7 +140,6 @@ export default {
       this.$refs[ref + 'Sidenav'].open()
     },
     close (ref) {
-      console.log('l')
       this.$refs[ref + 'Sidenav'].close()
     },
     logout () {

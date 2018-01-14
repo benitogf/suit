@@ -243,7 +243,6 @@ export default {
       this.$refs.productForm.close()
     },
     productPicture (e) {
-      console.log(e)
       this.product.picture = e
     },
     bagForm () {
