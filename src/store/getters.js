@@ -26,7 +26,7 @@ export const availableRoutes = state => {
     } else {
       if (staticRoutes.indexOf(name) === -1 && path !== '*' &&
         (name !== 'login' || state.user.user === null) &&
-        (name !== 'admin' || state.user.user !== null)) {
+        (name !== 'admin' || (state.user.user && state.user.user.role === 'admin'))) {
         cat.push({name, path})
       }
     }

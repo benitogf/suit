@@ -47,7 +47,7 @@ export default {
       user: {
         account: '',
         password: '',
-        userType: 'employee'
+        role: ''
       }
     }
   },
