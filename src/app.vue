@@ -1,69 +1,74 @@
 <template>
-  <div class="container">
-    <md-dialog-prompt v-if="user"
-      :md-theme="prompt.theme"
-      :md-title="prompt.title"
-      :md-ok-text="prompt.ok"
-      :md-cancel-text="prompt.cancel"
-      @close="onCloseDialog"
-      v-model="prompt.value"
-      ref="tag">
-    </md-dialog-prompt>
+  <div>
+    <div v-if="loading" class="container">
+      loading...
+    </div>
+    <div v-if="!loading" class="container">
+      <md-dialog-prompt v-if="user"
+        :md-theme="prompt.theme"
+        :md-title="prompt.title"
+        :md-ok-text="prompt.ok"
+        :md-cancel-text="prompt.cancel"
+        @close="onCloseDialog"
+        v-model="prompt.value"
+        ref="tag">
+      </md-dialog-prompt>
 
-    <md-whiteframe v-if="state !== 'login'" md-tag="md-toolbar" md-elevation="1" class="top-toolbar">
-      <md-button class="md-icon-button nav-trigger" @click="toggleSidenav">
-        <md-icon md-src="menu">menu</md-icon>
-      </md-button>
-      <md-layout md-align="end">
-        <md-button class="md-icon-button" @click.native="toggleRightSidenav">
-            <md-icon md-src="left-arrow">left-arrow</md-icon>
+      <md-whiteframe v-if="state !== 'login'" md-tag="md-toolbar" md-elevation="1" class="top-toolbar">
+        <md-button class="md-icon-button nav-trigger" @click="toggleSidenav">
+          <md-icon md-src="menu">menu</md-icon>
         </md-button>
-      </md-layout>
-    </md-whiteframe>
-
-    <md-sidenav v-if="state !== 'login'" class="nav-sidebar md-left md-fixed" md-swipeable ref="leftSidenav">
-      <md-toolbar class="logo">
-        <router-link exact to="/">
-          <md-icon md-src="corsarial"></md-icon>
-        </router-link>
-      </md-toolbar>
-
-      <md-list v-if="isAdmin">
-        <md-list-item>
-          <span></span><md-switch v-model="edit" id="edit-sidenav-toggle" name="edit-sidenav-toggle"></md-switch>
-        </md-list-item>
-      </md-list>
-
-      <md-list v-if="availableRoutes" class="sidenav-static-links">
-        <md-list-item v-for="r in availableRoutes" :key="r.name">
-          <router-link exact :to="r.path">
-            {{r.name}}
-          </router-link>
-        </md-list-item>
-      </md-list>
-
-      <md-list-tree :edit="edit && isAdmin" :tags="tags" @action="openDialog"></md-list-tree>
-
-    </md-sidenav>
-
-    <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav">
-
-      <md-toolbar class="md-right-close">
-        <div class="md-title">Shopping Bag</div>
         <md-layout md-align="end">
-          <md-button class="md-icon-button" @click.native="closeRightSidenav">
-            <md-icon md-src="close">close</md-icon>
+          <md-button class="md-icon-button" @click.native="toggleRightSidenav">
+              <i class="material-icons">shopping_basket</i>
           </md-button>
         </md-layout>
-      </md-toolbar>
+      </md-whiteframe>
 
-      <bag @close="close('right')" @open="open('right')"></bag>
+      <md-sidenav v-if="state !== 'login'" class="nav-sidebar md-left md-fixed" md-swipeable ref="leftSidenav">
+        <md-toolbar class="logo">
+          <router-link exact to="/">
+            <md-icon md-src="corsarial"></md-icon>
+          </router-link>
+        </md-toolbar>
 
-    </md-sidenav>
+        <md-list v-if="isAdmin">
+          <md-list-item>
+            <span></span><md-switch v-model="edit" id="edit-sidenav-toggle" name="edit-sidenav-toggle"></md-switch>
+          </md-list-item>
+        </md-list>
 
-    <transition appear name="slide-fade">
-      <router-view></router-view>
-    </transition>
+        <md-list v-if="availableRoutes" class="sidenav-static-links">
+          <md-list-item v-for="r in availableRoutes" :key="r.name">
+            <router-link exact :to="r.path">
+              {{r.name}}
+            </router-link>
+          </md-list-item>
+        </md-list>
+
+        <md-list-tree :edit="edit && isAdmin" :tags="tags" @action="openDialog"></md-list-tree>
+
+      </md-sidenav>
+
+      <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav">
+
+        <md-toolbar class="md-right-close">
+          <div class="md-title">Your Bag</div>
+          <md-layout md-align="end">
+            <md-button class="md-icon-button" @click.native="closeRightSidenav">
+              <md-icon md-src="close">close</md-icon>
+            </md-button>
+          </md-layout>
+        </md-toolbar>
+
+        <bag @close="close('right')" @open="open('right')"></bag>
+
+      </md-sidenav>
+
+      <transition appear name="slide-fade">
+        <router-view></router-view>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -86,6 +91,7 @@ export default {
   },
   data: () => ({
     edit: true,
+    loading: true,
     prompt: {
       title: 'Create tag',
       ok: 'Done',
@@ -146,6 +152,12 @@ export default {
       this.$refs.rightSidenav.close()
       return this.$store.dispatch('logout')
     }
+  },
+  mounted () {
+    const self = this
+    self.$store._vm.$root.$on('storageReady', () => {
+      self.loading = false
+    })
   }
 }
 </script>
@@ -198,14 +210,14 @@ export default {
     transition: $swift-ease-out;
   }
 
-  @media (min-width: $breakpoint-xlarge +1) {
-    .content {
-      margin-right: $sidenav-width;
-    }
-    .top-toolbar, .md-right-close {
-      display: none !important;
-    }
-  }
+  // @media (min-width: $breakpoint-xlarge +1) {
+  //   .content {
+  //     margin-right: $sidenav-width;
+  //   }
+  //   .top-toolbar, .md-right-close {
+  //     display: none !important;
+  //   }
+  // }
 
   code {
     &:not(.hljs) {
@@ -251,6 +263,12 @@ export default {
   .slide-fade-enter, .slide-fade-leave-to {
     transform: translateX(15px);
     opacity: 0;
+  }
+
+  .slide-fade-leave, .slide-fade-leave-to, .slide-fade-leave-active {
+    height: 0;
+    position: absolute;
+    z-index: -2;
   }
 
   .sidenav-static-links {

@@ -91,7 +91,7 @@
     <md-dialog ref="extraForm" v-if="edit && isAdmin">
       <md-dialog-title>{{ product.name + ' extra: ' + extraConfig.label }}</md-dialog-title>
       <md-dialog-content>
-        <form v-if="extraConfig.label === 'var'">
+        <form v-if="extraConfig.label === 'variant'">
           <md-input-container>
             <label>Label</label>
             <md-input v-model="extra.label"></md-input>
@@ -174,8 +174,8 @@ import { mapGetters, mapActions } from 'vuex'
 import router from '@/router'
 
 function calculatePrice () {
-  const price = this.product.vars ? this.product.vars.reduce((cat, {label, price}) => {
-    if (label === this.product.var) {
+  const price = this.product.variants ? this.product.variants.reduce((cat, {label, price}) => {
+    if (label === this.product.variant) {
       cat = price
     }
     return cat
@@ -204,10 +204,10 @@ export default {
     edit: Boolean
   },
   data: () => ({
-    extras: ['var', 'bulk'],
+    extras: ['variant', 'bulk'],
     extra: {},
     extraConfig: {
-      label: 'var',
+      label: 'variant',
       action: 'add'
     },
     confirm: {
@@ -228,7 +228,7 @@ export default {
     }
   },
   watch: {
-    'product.var': calculatePrice,
+    'product.variant': calculatePrice,
     'product.bulk': calculatePrice,
     'product.basePrice': calculatePrice
   },
@@ -322,9 +322,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.product-margin {
-  display: block;
-}
+@import 'src/components/material/core/stylesheets/variables.scss';
 
 .md-title {
   font-size: 15px !important;
@@ -342,7 +340,9 @@ export default {
 }
 
 .product {
-  flex: 1;
+  &:not(.product-view) {
+    flex: 1;
+  }
   .md-card-media img {
     width: auto !important;
     display: flex;
@@ -352,8 +352,15 @@ export default {
     color: #8e8e8e;
   }
 }
+
 .product-view {
-  max-width: 628px;
-  margin: 0 auto;
+  overflow-y: hidden;
+  display: table;
+}
+
+.product-margin {
+  // flex: 0;
+  // display: initial;
+  justify-content: center;
 }
 </style>

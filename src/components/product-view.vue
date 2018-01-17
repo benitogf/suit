@@ -10,8 +10,8 @@
         </md-layout>
       </md-layout>
     </md-subheader>
-    <md-layout md-flex>
-      <product :showActions="false" :edit="edit" :product="product"></product>
+    <md-layout md-align="center">
+      <product v-if="product" :showActions="false" :edit="edit" :product="product"></product>
     </md-layout>
   </md-layout>
 </template>
@@ -25,7 +25,7 @@ export default {
   components: { Product },
   computed: {
     ...mapGetters({
-      product: 'currentProduct',
+      product: 'product',
       isAdmin: 'isAdmin'
     }),
     src () {

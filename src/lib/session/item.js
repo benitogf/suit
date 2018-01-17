@@ -9,6 +9,7 @@ const item = {
         item.id = await this.session.hash(item.label)
       }
       let data = await this.session.pack(item, selectedHub.keyword)
+      console.log(item.label, item.id, data.length)
       return this.set(['item', selectedHub.id, item.id], data)
     } else {
       return new Promise((resolve, reject) => {

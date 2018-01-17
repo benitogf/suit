@@ -1,26 +1,24 @@
 import router from '@/router'
 
 export const bagProducts = state => {
-  return state.bag.added.map(({ id, variant, bulk, price, quantity }) => {
+  return state.bag.added.map(({ id, variant, bulk, price, quantity, bulkQuantity }) => {
     const product = state.products.all.find(p => p.id === id)
     return {
-      id: product.id,
-      title: product.title,
+      id,
+      picture: product.picture,
+      name: product.name,
       variant,
       bulk,
       price,
-      quantity
+      quantity,
+      bulkQuantity
     }
   })
 }
 
-export const currentState = state => {
-  return state.route.name
-}
+export const currentState = state => state.route.name
 
-export const isAdmin = state => {
-  return state && state.user.user && state.user.user.role === 'admin'
-}
+export const isAdmin = state => state && state.user.user && state.user.user.role === 'admin'
 
 export const availableRoutes = state => {
   const staticRoutes = ['tag', 'product', 'logout']
@@ -30,7 +28,7 @@ export const availableRoutes = state => {
     } else {
       if (staticRoutes.indexOf(name) === -1 && path !== '*' &&
         (name !== 'login' || state.user.user === null) &&
-        (name !== 'admin' || isAdmin())) {
+        (name !== 'admin' || isAdmin(state))) {
         cat.push({name, path})
       }
     }

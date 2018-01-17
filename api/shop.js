@@ -13,9 +13,9 @@ const _products = [
     "inventory": -1,
     "quantity": 1,
     "description": "just one apple.",
-    "var": "green",
+    "variant": "green",
     "bulk": "single",
-    "vars": [
+    "variants": [
       {
         "label": "green",
         "price": 40.54
