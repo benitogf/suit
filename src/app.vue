@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <div v-if="loading" class="container">
-      loading...
-    </div>
+  <div class="container">
+    <md-layout md-flex="100" md-align="center" v-if="loading">
+      <md-progress md-indeterminate></md-progress>
+    </md-layout>
     <div v-if="!loading" class="container">
       <md-dialog-prompt v-if="user"
         :md-theme="prompt.theme"

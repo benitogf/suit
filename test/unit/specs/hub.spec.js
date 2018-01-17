@@ -72,10 +72,11 @@ describe('Warehouse service', function () {
     this.timeout(32000)
     let initial = await wh.quota()
     let qts = []
+    console.log('INITIAL', initial.usage)
     for (let update of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
       await wh.item.set(testItem)
       let qt = await wh.quota()
-      console.log(update)
+      console.log(update, qt.usage)
       qts.push(qt)
     }
     console.log('QUOTAS:', initial, qts)
