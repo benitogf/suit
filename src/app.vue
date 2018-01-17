@@ -207,7 +207,7 @@ export default {
     display: flex;
     flex-flow: column nowrap;
     flex: 1;
-    transition: $swift-ease-out;
+    // transition: $swift-ease-out;
   }
 
   // @media (min-width: $breakpoint-xlarge +1) {
@@ -266,9 +266,9 @@ export default {
   }
 
   .slide-fade-leave, .slide-fade-leave-to, .slide-fade-leave-active {
-    height: 0;
     position: absolute;
     z-index: -2;
+    opacity: 0;
   }
 
   .sidenav-static-links {
