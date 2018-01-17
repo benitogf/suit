@@ -75,6 +75,7 @@ describe('Warehouse service', function () {
     for (let update of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
       await wh.item.set(testItem)
       let qt = await wh.quota()
+      console.log(update)
       qts.push(qt)
     }
     console.log('QUOTAS:', initial, qts)
