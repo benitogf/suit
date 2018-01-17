@@ -10,13 +10,6 @@
 <script>
 import { mapActions } from 'vuex'
 
-function findSidenav (root) {
-  while (root.$el.classList.value.indexOf('md-sidenav') === -1) {
-    root = root.$parent
-  }
-  return root
-}
-
 export default {
   name: 'BagProduct',
   props: {
@@ -24,8 +17,7 @@ export default {
   },
   watch: {
     'product.quantity': function () {
-      console.log('look', this)
-      findSidenav(this.$parent).$emit('bag')
+      this.$emit('open')
     }
   },
   methods: mapActions([

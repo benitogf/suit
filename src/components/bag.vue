@@ -4,7 +4,6 @@
     <md-card class="md-primary">
 
       <md-card-header>
-        <div class="md-title">Shopping Bag</div>
         <p v-show="checkoutStatus">Checkout {{ checkoutStatus }}.</p>
       </md-card-header>
 
@@ -12,7 +11,7 @@
         <p v-show="!products.length"><i>Please consider adding some products to your bag</i></p>
         <md-list v-if="products.length > 0">
           <md-list-item v-for="(p, index) in products" :key="index" class="bag-item">
-            <bag-product :product="p"></bag-product>
+            <bag-product @open="open()" :product="p"></bag-product>
             <md-divider v-if="index < products.length - 1"></md-divider>
           </md-list-item>
           <md-list-item>
@@ -22,9 +21,8 @@
       </md-card-content>
 
       <md-card-actions>
-        <router-link class="md-button md-default" exact to="/shop"
-          v-if="state !== 'shop'">back to shop
-        </router-link>
+        <md-button class="md-accent md-raised"
+          @click="keepShopping()">keep shopping</md-button>
         <md-button class="md-default md-raised"
           :disabled="!products.length"
           @click.native="checkout(products)">Checkout</md-button>
@@ -38,6 +36,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import BagProduct from './bag-product.vue'
+import router from '@/router'
 
 export default {
   name: 'Bag',
@@ -56,13 +55,24 @@ export default {
   },
   watch: {
     'products.length': function () {
-      this.$parent.$emit('bag')
+      this.open()
     }
   },
-  methods: mapActions([
-    'removeFromBag',
-    'checkout'
-  ])
+  methods: {
+    ...mapActions([
+      'removeFromBag',
+      'checkout'
+    ]),
+    keepShopping () {
+      this.$emit('close')
+      if (this.state !== 'shop') {
+        router.push({ name: 'shop' })
+      }
+    },
+    open () {
+      this.$emit('open')
+    }
+  }
 }
 </script>
 
@@ -74,7 +84,6 @@ export default {
   }
 }
 .bag-item {
-
     padding: 0 0 0 16px;
 }
 .md-list {

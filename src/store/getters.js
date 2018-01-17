@@ -18,6 +18,10 @@ export const currentState = state => {
   return state.route.name
 }
 
+export const isAdmin = state => {
+  return state && state.user.user && state.user.user.role === 'admin'
+}
+
 export const availableRoutes = state => {
   const staticRoutes = ['tag', 'product', 'logout']
   return router.options.routes.reduce((cat, {name, path}) => {
@@ -26,7 +30,7 @@ export const availableRoutes = state => {
     } else {
       if (staticRoutes.indexOf(name) === -1 && path !== '*' &&
         (name !== 'login' || state.user.user === null) &&
-        (name !== 'admin' || (state.user.user && state.user.user.role === 'admin'))) {
+        (name !== 'admin' || isAdmin())) {
         cat.push({name, path})
       }
     }

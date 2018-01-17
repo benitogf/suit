@@ -16,7 +16,7 @@ const getters = {
 // actions
 const actions = {
   addToBag ({ commit }, product) {
-    if (product.inventory > 0) {
+    if (product.inventory !== 0) {
       commit(types.ADD_TO_BAG, {
         id: product.id,
         variant: product.variant,

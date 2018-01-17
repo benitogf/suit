@@ -8,6 +8,7 @@ import store from './store'
 import filter from './filter'
 import { sync } from 'vuex-router-sync'
 import quill from '@/lib/quill'
+import PictureInput from '@/lib/picture'
 import VueMaterial from '@/config'
 
 Vue.use(VueMaterial)
@@ -75,6 +76,7 @@ Vue.material.registerTheme({
 Vue.material.setCurrentTheme('teal')
 sync(store, router)
 Vue.use(quill)
+Vue.use(PictureInput)
 
 Vue.http.interceptors.push((request, next) => {
   if (store.getters.currentUser !== null) {

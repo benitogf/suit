@@ -28,7 +28,7 @@
         </router-link>
       </md-toolbar>
 
-      <md-list v-if="!!user && user.role === 'admin'">
+      <md-list v-if="isAdmin">
         <md-list-item>
           <span></span><md-switch v-model="edit" id="edit-sidenav-toggle" name="edit-sidenav-toggle"></md-switch>
         </md-list-item>
@@ -42,13 +42,14 @@
         </md-list-item>
       </md-list>
 
-      <md-list-tree :edit="edit && !!user && user.role === 'admin'" :tags="tags" @action="openDialog"></md-list-tree>
+      <md-list-tree :edit="edit && isAdmin" :tags="tags" @action="openDialog"></md-list-tree>
 
     </md-sidenav>
 
-    <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav" @bag="open('right')">
+    <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav">
 
       <md-toolbar class="md-right-close">
+        <div class="md-title">Shopping Bag</div>
         <md-layout md-align="end">
           <md-button class="md-icon-button" @click.native="closeRightSidenav">
             <md-icon md-src="close">close</md-icon>
@@ -56,7 +57,7 @@
         </md-layout>
       </md-toolbar>
 
-      <bag></bag>
+      <bag @close="close('right')" @open="open('right')"></bag>
 
     </md-sidenav>
 
@@ -79,7 +80,8 @@ export default {
       user: 'currentUser',
       state: 'currentState',
       tags: 'getTags',
-      availableRoutes: 'availableRoutes'
+      availableRoutes: 'availableRoutes',
+      isAdmin: 'isAdmin'
     })
   },
   data: () => ({
@@ -150,6 +152,29 @@ export default {
 
 <style lang="scss">
   @import 'src/components/material/core/stylesheets/variables.scss';
+  /* fallback */
+  @font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/static/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2') format('woff2');
+  }
+
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
 
   [v-cloak] {
     display: none;
