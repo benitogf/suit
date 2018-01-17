@@ -68,7 +68,7 @@ describe('Warehouse service', function () {
     let items = await wh.item.getAll()
     expect(items.length).to.eq(1)
   })
-  it('should set the same data with no size increment', async function() {
+  it('should set the same data with no size increment', async function () {
     this.timeout(32000)
     let initial = await wh.quota()
     let qts = []

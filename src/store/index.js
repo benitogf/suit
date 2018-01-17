@@ -35,7 +35,7 @@ const persist = new VuexPersist({
       const id = await wh.session.hash(key)
       try {
         const state = await wh.item.get(id)
-        return state
+        return state.data
       } catch (e) {}
 
       return {}

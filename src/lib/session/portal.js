@@ -75,7 +75,7 @@ async function initStoragePersistence () {
   }
 }
 
-class C137 {
+class Portal {
   constructor (opt) {
     try {
       if (window.Worker) {
@@ -93,7 +93,7 @@ class C137 {
         console.log(quota)
       })
       this.quota = showEstimatedQuota
-      this.name = (opt && opt.name) ? opt.name : 'c137'
+      this.name = (opt && opt.name) ? opt.name : 'suit'
       this.version = (opt && opt.version) ? opt.version : 1
       this.db = new Dexie(this.name)
       this.db.version(this.version).stores({
@@ -107,4 +107,4 @@ class C137 {
   }
 }
 
-export { C137 }
+export { Portal }
