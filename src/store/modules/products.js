@@ -4,13 +4,13 @@ import * as types from '../mutation-types'
 // initial state
 const state = {
   all: null,
-  currentProduct: null
+  selected: null
 }
 
 // getters
 const getters = {
-  allProducts: state => state.all,
-  currentProduct: state => state.currentProduct
+  products: state => state.all,
+  product: state => Array.isArray(state.all) ? state.all.find(product => product.id === state.selected) : null
 }
 
 // actions
@@ -18,7 +18,7 @@ const actions = {
   addProduct ({ commit }, baseProduct) {
     commit(types.ADD_PRODUCT, { baseProduct })
   },
-  getAllProducts ({ commit, state }) {
+  getProducts ({ commit, state }) {
     if (!Array.isArray(state.all)) {
       shop.getProducts(products => {
         commit(types.CLEAR_BAG)
@@ -31,10 +31,10 @@ const actions = {
       shop.getProducts(products => {
         commit(types.CLEAR_BAG)
         commit(types.RECEIVE_PRODUCTS, { products })
-        commit(types.RECEIVE_PRODUCT, { id })
+        commit(types.SELECT_PRODUCT, { id })
       })
     } else {
-      commit(types.RECEIVE_PRODUCT, { id })
+      commit(types.SELECT_PRODUCT, { id })
     }
   },
   removeExtra ({ commit }, { id, label, extra }) {
@@ -49,8 +49,8 @@ const actions = {
 
 // mutations
 const mutations = {
-  [types.ADD_TO_BAG] (state, { id }) {
-    state.all.find(product => product.id === id).inventory--
+  [types.ADD_TO_BAG] (state, { id, quantity }) {
+    state.all.find(product => product.id === id).inventory -= quantity
   },
 
   [types.ADD_PRODUCT] (state, { baseProduct }) {
@@ -76,12 +76,12 @@ const mutations = {
     state.all = products
   },
 
-  [types.RECEIVE_PRODUCT] (state, { id }) {
-    state.currentProduct = state.all.find(product => product.id === id)
+  [types.SELECT_PRODUCT] (state, { id }) {
+    state.selected = id
   },
 
-  [types.REMOVE_FROM_BAG] (state, { id }) {
-    state.all.find(product => product.id === id).inventory++
+  [types.REMOVE_FROM_BAG] (state, { id, quantity }) {
+    state.all.find(product => product.id === id).inventory += quantity
   }
 }
 

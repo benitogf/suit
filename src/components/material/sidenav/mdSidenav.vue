@@ -150,12 +150,16 @@
   &.md-right .md-sidenav-content {
     right: 0;
     transform: translate3D(100%, 0, 0);
+    width: 330px;
     @media (min-width: $breakpoint-xlarge + 1) {
-      top: 0;
-      pointer-events: auto;
-      transform: translate3d(0, 0, 0) !important;
-      box-shadow: $material-shadow-2dp;
+      width: 430px;
     }
+    // @media (min-width: $breakpoint-xlarge + 1) {
+    //   top: 0;
+    //   pointer-events: auto;
+    //   transform: translate3d(0, 0, 0) !important;
+    //   box-shadow: $material-shadow-2dp;
+    // }
   }
 
   &.md-fixed {
@@ -167,7 +171,7 @@
 
   .md-sidenav-content {
     width: $sidenav-width;
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     z-index: 100;
@@ -179,7 +183,7 @@
     will-change: transform;
     display: flex;
     flex-flow: column;
-    overflow: hidden;
+    // overflow: hidden;
   }
 
   .md-backdrop {
@@ -213,10 +217,10 @@
 
 .md-backdrop {
   background-color: rgba(249, 249, 249, 0.87);
-  @media (min-width: $breakpoint-xlarge) {
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
+  // @media (min-width: $breakpoint-xlarge) {
+  //   opacity: 0 !important;
+  //   pointer-events: none !important;
+  // }
 }
 
 .md-toolbar {

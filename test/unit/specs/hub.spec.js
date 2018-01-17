@@ -2,12 +2,13 @@
 import wh from '@/lib/session'
 import _ from 'lodash'
 import { expect } from 'chai'
+import pictures from '../../../api/pictures'
 
 describe('Warehouse service', function () {
   var data = 'Δευτέρα - Σάββατο 09.00-17.00 Κυριακές & Αργίες Κλειστό'
   var testItem = {
     label: 'Δευτέρα - Σάββατο 09.00-17.00 Κυριακές & Αργίες Κλειστό',
-    data: data
+    data: pictures
   }
   var newTestItem = {
     label: 'A new test name',
@@ -42,11 +43,13 @@ describe('Warehouse service', function () {
     expect(hub.id).to.eq(testHubKey)
   })
   it('should get a list of hubs', async function () {
+    this.timeout(12000)
     await wh.hub.select(testHubKey, testKeyword)
     let hubs = await wh.hub.getAll()
     expect(hubs).to.be.an.instanceOf(Array)
   })
   it('should fail to create a duplicated hub', async function () {
+    this.timeout(12000)
     try {
       await wh.hub.create(testHubKey, testKeyword)
       throw new Error('Duplicated hub created')
@@ -65,11 +68,26 @@ describe('Warehouse service', function () {
     let items = await wh.item.getAll()
     expect(items.length).to.eq(1)
   })
+  it('should set the same data with no size increment', async function () {
+    this.timeout(32000)
+    let initial = await wh.quota()
+    let qts = []
+    console.log('INITIAL', initial.usage)
+    for (let update of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+      await wh.item.set(testItem)
+      let qt = await wh.quota()
+      console.log(update, qt.usage)
+      qts.push(qt)
+    }
+    console.log('QUOTAS:', initial, qts)
+  })
   it('should get an item', async function () {
+    this.timeout(12000)
     let item = await wh.item.get(testId)
     expect(item.id).to.eq(testId)
   })
   it('should update an item', async function () {
+    this.timeout(12000)
     let otherItem = {}
     let hub = await wh.session.getHub()
     Object.assign(otherItem, newTestItem)
@@ -79,6 +97,7 @@ describe('Warehouse service', function () {
     expect(newId).to.eq('item:' + hub + ':' + newTestId)
   })
   it('should fail to get the updated item', async function () {
+    this.timeout(12000)
     let eq
     try {
       let items = await wh.item.getAll()
@@ -89,6 +108,7 @@ describe('Warehouse service', function () {
     expect(eq).to.eq(undefined)
   })
   it('should fail to get an item with a nonexistent key', async function () {
+    this.timeout(12000)
     let data
     try {
       data = await wh.item.get('FakeKey')
@@ -98,6 +118,7 @@ describe('Warehouse service', function () {
     expect(data).to.eq(undefined)
   })
   it('should fail to update a nonexistent item', async function () {
+    this.timeout(12000)
     let data
     try {
       data = await wh.item.update(fakeItem)
@@ -107,6 +128,7 @@ describe('Warehouse service', function () {
     expect(data).to.eq(undefined)
   })
   it('should fail to create duplicated items', async function () {
+    this.timeout(12000)
     let data
     try {
       data = await wh.item.create(newTestItem)
@@ -116,16 +138,19 @@ describe('Warehouse service', function () {
     expect(data).to.eq(undefined)
   })
   it('should remove an item', async function () {
+    this.timeout(12000)
     let newItems = await wh.item.delSome([newTestId])
     expect(newItems.map((x) => x.id).indexOf(newTestId)).to.eq(-1)
   })
   it('should remove items', async function () {
+    this.timeout(12000)
     await wh.hub.select(newTestHubKey, newTestKeyword)
     let newItems = await wh.item.delSome([testId, newTestId])
     expect(newItems.map((x) => x.id).indexOf(testId)).to.eq(-1)
     expect(newItems.map((x) => x.id).indexOf(newTestId)).to.eq(-1)
   })
   it('should update a hub', async function () {
+    this.timeout(12000)
     let now = Date.now()
     await wh.hub.select(testHubKey, testKeyword)
     await wh.hub.update(testHubKey, newTestHubKey + now, newTestKeyword)
@@ -134,10 +159,12 @@ describe('Warehouse service', function () {
     expect(hubs.map((x) => x.id).indexOf(testHubKey)).to.eq(-1)
   })
   it('should create a hub with previously used id', async function () {
+    this.timeout(12000)
     let hub = await wh.hub.create(testHubKey, testKeyword)
     expect(hub.id).to.eq(testHubKey)
   })
   it('should fail to update a nonexistent hub', async function () {
+    this.timeout(12000)
     let data
     try {
       await wh.hub.update('fakeHub', newTestHubKey)

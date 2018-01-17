@@ -17,7 +17,7 @@ module.exports =  merge(baseWebpackConfig, {
   // we're running this from node, not a browser
   target: 'web',
   // pull in all our test source files into the bundle
-  entry: './src/lib/C137/worker.js',
+  entry: './src/lib/session/worker.js',
   output: {
     // location of the output directory
     path: distDir,

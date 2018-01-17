@@ -1,5 +1,5 @@
 // @flow
-import { C137 } from '@/lib/session/portal'
+import { Portal } from '@/lib/session/portal'
 
 const item = {
   async set (item) {
@@ -9,6 +9,8 @@ const item = {
         item.id = await this.session.hash(item.label)
       }
       let data = await this.session.pack(item, selectedHub.keyword)
+      console.log(item.id, data.length)
+      // TODO: prevent leaving the page while a db operation is in progress
       return this.set(['item', selectedHub.id, item.id], data)
     } else {
       return new Promise((resolve, reject) => {
@@ -163,7 +165,7 @@ const item = {
   }
 }
 
-class Item extends C137 {
+class Item extends Portal {
   constructor (opt) {
     super(opt)
     this.item = {}

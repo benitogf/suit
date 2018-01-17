@@ -1,8 +1,8 @@
 import shop from '../../../api/shop'
 import * as types from '../mutation-types'
 
-// initial state
-// shape: [{ id, quantity }]
+const findRecord = (state, id, variant, bulk) => state.added.findIndex(product => product.id === id && product.variant === variant && product.bulk === bulk)
+
 const state = {
   added: [],
   checkoutStatus: null
@@ -17,23 +17,11 @@ const getters = {
 const actions = {
   addToBag ({ commit }, product) {
     if (product.inventory !== 0) {
-      commit(types.ADD_TO_BAG, {
-        id: product.id,
-        variant: product.variant,
-        bulk: product.bulk,
-        price: product.price,
-        quantity: product.quantity
-      })
+      commit(types.ADD_TO_BAG, product)
     }
   },
   removeFromBag ({ commit }, product) {
-    commit(types.REMOVE_FROM_BAG, {
-      id: product.id,
-      variant: product.variant,
-      bulk: product.bulk,
-      price: product.price,
-      quantity: product.quantity
-    })
+    commit(types.REMOVE_FROM_BAG, product)
   },
   checkout ({ commit, state }, products) {
     const savedBagItems = [...state.added]
@@ -49,9 +37,8 @@ const actions = {
 // mutations
 const mutations = {
   [types.ADD_TO_BAG] (state, { id, variant, bulk, price, quantity }) {
-    state.lastCheckout = null
-    const record = state.added.find(p => p.id === id && p.variant === variant && p.bulk === bulk)
-    if (!record) {
+    const record = findRecord(state, id, variant, bulk)
+    if (record === -1) {
       state.added.push({
         id,
         variant,
@@ -61,13 +48,12 @@ const mutations = {
         quantity
       })
     } else {
-      record.quantity += quantity
+      state.added[record].quantity += quantity
     }
   },
 
   [types.REMOVE_FROM_BAG] (state, { id, variant, bulk, price, quantity }) {
-    state.lastCheckout = null
-    const record = state.added.findIndex(p => p.id === id && p.variant === variant && p.bulk === bulk)
+    const record = findRecord(state, id, variant, bulk)
     if (state.added[record].bulkQuantity === quantity) {
       state.added.splice(record, 1)
     } else {
@@ -76,13 +62,11 @@ const mutations = {
   },
 
   [types.CLEAR_BAG] (state) {
-    // clear bag
     state.added = []
     state.checkoutStatus = null
   },
 
   [types.CHECKOUT_REQUEST] (state) {
-    // clear bag
     state.added = []
     state.checkoutStatus = null
   },

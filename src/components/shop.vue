@@ -48,7 +48,7 @@ export default {
   components: { Product },
   computed: {
     ...mapGetters({
-      products: 'allProducts',
+      products: 'products',
       isAdmin: 'isAdmin'
     })
   },
@@ -85,7 +85,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getAllProducts')
+    this.$store.dispatch('getProducts')
   }
 }
 </script>
@@ -123,43 +123,43 @@ export default {
   min-width: unset;
 
   @media (max-width: $breakpoint-small) {
-    max-width: 100%;
-    min-width: 100%;
+    max-width: 100vw;
+    min-width: 100vw;
   }
 
-  @media (max-width: $breakpoint-medium) {
-    max-width: 100%;
-    min-width: 100%;
+  @media (min-width: $breakpoint-small+1) {
+    max-width: 48vw;
+    min-width: 48vw;
   }
 
   @media (min-width: $breakpoint-medium) {
-    max-width: 24.5rem;
-    min-width: 23.5rem;
+    max-width: 50vw;
+    min-width: 48vw;
   }
 
   @media (min-width: $breakpoint-xmedium) {
-    max-width: 21rem;
-    min-width: 20rem;
+    max-width: 33vw;
+    min-width: 32vw;
   }
 
   @media (min-width: $breakpoint-large) {
-    max-width: 24rem;
-    min-width: 21rem;
+    max-width: 20vw;
+    min-width: 25.7vw;
   }
 
   @media (min-width: $breakpoint-xlarge +1) {
-    max-width: 20rem;
-    min-width: 18rem;
+    max-width: 26vw;
+    min-width: 26.5vw;
   }
 
   @media (min-width: $breakpoint-xxlarge) {
-    max-width: 28rem;
-    min-width: 22rem;
+    max-width: 20.9vw;
+    min-width: 20.6vw;
   }
 
-  @media (min-width: $breakpoint-xxxlarge) {
-    max-width: 41rem;
-    min-width: 41rem;
+  @media (min-width: $breakpoint-xxxlarge +1) {
+    max-width: 22vw;
+    min-width: 22vw;
   }
 
 }
