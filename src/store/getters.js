@@ -1,11 +1,11 @@
 import router from '@/router'
 
-const staticRoutes = ['tag', 'product', 'logout']
+const excludedRoutes = ['tag', 'product']
 
 export const availableRoutes = state => router.options.routes.reduce((cat, {name, path}) => {
-  if (staticRoutes.indexOf(name) === -1 && path !== '*' &&
+  if (excludedRoutes.indexOf(name) === -1 && path !== '*' &&
     (name !== 'login' || state.user.user === null) &&
-    (name !== 'admin' || isAdmin(state))) {
+    (name !== 'logout' || isAdmin(state))) {
     cat.push({name, path})
   }
   return cat

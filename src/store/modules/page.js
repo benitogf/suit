@@ -15,19 +15,17 @@ const getters = {}
 
 // actions
 const actions = {
-  async setPage ({ commit }, { tag, page }) {
-    // console.log(['page:', tag], page)
-    // await wh.set(['page:', tag], page)
+  setPage ({ commit }, { tag, page }) {
     commit(types.SET_PAGES, { tag, page })
   },
-  async getPage ({ commit, state }, tag) {
+  getPage ({ commit, state }, tag) {
     let page
-    if (!state.page[tag]) {
+    console.log(state.pages)
+    if (!state.pages[tag]) {
       page = {}
     } else {
-      page = state.page[tag]
+      page = state.pages[tag]
     }
-    // let page = await wh.get(['page:', tag])
     commit(types.SET_PAGES, { tag, page })
     return page
   }

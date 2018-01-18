@@ -74,10 +74,11 @@ export default {
       theme: 'white'
     }
   }),
-  methods: Object.assign(mapActions([
-    'getPage',
-    'setPage'
-  ]), {
+  methods: {
+    ...mapActions([
+      'getPage',
+      'setPage'
+    ]),
     openDialogSub (ref) {
       this.prompt.title = 'Create field'
       if (ref.id) {
@@ -106,7 +107,7 @@ export default {
           id: this.prompt.value,
           data: [{}]
         })
-        this.setPage({ tag: this.id, page: page })
+        await this.setPage({ tag: this.id, page: page })
         await this.reload()
       }
     },
@@ -116,17 +117,13 @@ export default {
           root: []
         }
       }
-      try {
-        let page = await this.getPage(this.id)
-        if (!page) {
-          page = base
-        }
-        this.page = page
-      } catch (e) {
-        this.page = base
+      let page = await this.getPage(this.id)
+      if (!page) {
+        page = base
       }
+      this.page = page
     }
-  }),
+  },
   watch: {
     async id () {
       Vue.nextTick(async () => {
