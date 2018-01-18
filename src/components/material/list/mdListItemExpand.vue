@@ -92,7 +92,6 @@
     },
     mounted () {
       let grandPa = this.$parent.$parent
-      console.log(grandPa.$el.classList.value)
       if (grandPa.$el.classList.value.indexOf('md-list-form') !== -1) {
         this.edit = grandPa.$props.edit
         this.$watch('$parent.$parent.$props.edit', function (newVal, oldVal) {

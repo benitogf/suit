@@ -34,12 +34,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import router from '@/router'
 
 export default {
   name: 'login',
   computed: {
     ...mapGetters({
-      error: 'loginError'
+      error: 'loginError',
+      currentUser: 'currentUser'
     })
   },
   data: function () {
@@ -53,7 +55,12 @@ export default {
   },
   methods: mapActions([
     'login'
-  ])
+  ]),
+  mounted () {
+    if (this.currentUser) {
+      router.push({ name: 'home' })
+    }
+  }
 }
 </script>
 

@@ -1,28 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '@/store'
 import login from '@/components/login'
+import logout from '@/components/logout'
 import home from '@/components/home'
 import tag from '@/components/tag'
-import admin from '@/components/admin'
 import about from '@/components/about'
 import shop from '@/components/shop'
 import product from '@/components/product-view'
 import nah from '@/components/404'
 
 Vue.use(Router)
-
-const authCheck = (to, from, next) => {
-  if (store.getters.currentUser === null) {
-    next('/login')
-  } else {
-    next()
-  }
-}
-
-const logout = (to, from, next) => {
-  store.dispatch('logout')
-}
 
 export default new Router({
   mode: 'history',
@@ -51,14 +38,7 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: login,
-      beforeEnter: (to, from, next) => {
-        if (store.getters.currentUser !== null) {
-          next('/')
-        } else {
-          next()
-        }
-      }
+      component: login
     },
     {
       path: '/tag/:id',
@@ -67,16 +47,9 @@ export default new Router({
       props: true
     },
     {
-      path: '/admin',
-      name: 'admin',
-      component: admin,
-      props: true,
-      beforeEnter: authCheck
-    },
-    {
       path: '/logout',
       name: 'logout',
-      beforeEnter: logout
+      component: logout
     },
     {
       path: '*',
