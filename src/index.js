@@ -93,16 +93,6 @@ Vue.http.interceptors.push((request, next) => {
   })
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (store._vm.$root.$data['vue-persist-patch-delay'] !== false) {
-//     store._vm.$root.$on('storageReady', () => {
-//       next({path: to.path, query: to.query, params: to.params})
-//     })
-//   } else {
-//     next()
-//   }
-// })
-
 var ws = new Wss(process.env.WSS)
 ws.onopen = function (evt) {
   console.info('OPEN')

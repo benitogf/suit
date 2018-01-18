@@ -158,7 +158,7 @@
 
       <md-card-media>
         <router-link exact :to="'/product/'+product.id">
-          <img :src="product.picture" :alt="product.name">
+          <md-image :md-src="product.picture" :alt="product.name"></md-image>
         </router-link>
       </md-card-media>
 

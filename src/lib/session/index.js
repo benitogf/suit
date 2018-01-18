@@ -1,6 +1,6 @@
 // @flow
-import { Delta } from '@/lib/session/delta'
+import { State } from '@/lib/session/state'
 
-const wh = new Delta()
+const wh = new State()
 
 export default wh

@@ -8,8 +8,8 @@
           <md-input-container>
             <label for="base">Base product</label>
             <md-select name="base" id="base" v-model="baseProduct">
-              <md-option :value="0">default</md-option>
-              <md-option v-for="product in products" :value="product.id" :key="product.id">{{product.name}}</md-option>
+              <md-option value="">default</md-option>
+              <md-option v-for="(product, index) in products" :value="index" :key="product.id">{{product.name}}</md-option>
             </md-select>
           </md-input-container>
         </form>
@@ -76,7 +76,7 @@ export default {
     closeProductForm (add) {
       this.$refs.productForm.close()
       if (add) {
-        if (this.baseProduct === 0) {
+        if (this.baseProduct === '') {
           this.addProduct(this.defaultProduct)
         } else {
           this.addProduct(this.products[this.baseProduct])
