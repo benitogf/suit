@@ -16,10 +16,9 @@ const filteredMutations = ['CLEAR_BAG', 'SELECT_PRODUCT', 'route/ROUTE_CHANGED']
 
 const persistEmitter = () => {
   return store => {
-    store._vm.$root.$data['vue-persist-patch-delay'] = true
     store.subscribe(mutation => {
+      // console.log('MUT', mutation.type)
       if (mutation.type === 'RESTORE_MUTATION') {
-        store._vm.$root.$data['vue-persist-patch-delay'] = false
         store._vm.$root.$emit('storageReady')
       }
     })
@@ -32,20 +31,19 @@ const persist = new VuexPersist({
   storage: {
     getItem: async key => {
       await wh.hub.upsert('public', 'public')
-      const id = await wh.session.hash(key)
       try {
-        const state = await wh.item.get(id)
-        return state.data
+        const state = await wh.state.get(key + ':state')
+        // console.log('state:get', state)
+        return state
       } catch (e) {}
 
       return {}
     },
     setItem: async (key, value) => {
+      // console.log(Object.keys(value), value.products)
       await wh.hub.upsert('public', 'public')
-      return wh.item.set({ label: key, data: value })
-    },
-    removeItem: key => {
-      return wh.item.delSome([key])
+      // console.log('state:set', value)
+      return await wh.state.set(key + ':state', value)
     },
     _config: {
       name: 'localforage'

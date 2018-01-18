@@ -16,7 +16,7 @@ const getters = {
 // actions
 const actions = {
   addProduct ({ commit }, baseProduct) {
-    commit(types.ADD_PRODUCT, { baseProduct })
+    commit(types.ADD_PRODUCT, { ...baseProduct })
   },
   getProducts ({ commit, state }) {
     if (!Array.isArray(state.all)) {
@@ -53,7 +53,7 @@ const mutations = {
     state.all.find(product => product.id === id).inventory -= quantity
   },
 
-  [types.ADD_PRODUCT] (state, { baseProduct }) {
+  [types.ADD_PRODUCT] (state, baseProduct) {
     const newId = state.all.length + 1
     baseProduct.id = newId
     baseProduct.name = baseProduct.name + '(' + newId + ')'

@@ -1,37 +1,34 @@
 import router from '@/router'
 
-export const bagProducts = state => {
-  return state.bag.added.map(({ id, variant, bulk, price, quantity, bulkQuantity }) => {
-    const product = state.products.all.find(p => p.id === id)
-    return {
-      id,
-      picture: product.picture,
-      name: product.name,
-      variant,
-      bulk,
-      price,
-      quantity,
-      bulkQuantity
+const staticRoutes = ['tag', 'product', 'logout']
+
+export const availableRoutes = state => router.options.routes.reduce((cat, {name, path}) => {
+  if (staticRoutes.indexOf(name) === -1 && path !== '*' &&
+    (name !== 'login' || state.user.user === null) &&
+    (name !== 'admin' || isAdmin(state))) {
+    cat.push({name, path})
+  }
+  return cat
+}, [])
+
+export const bagProducts = state => state.products.all ? state.products.all.reduce((cat, { id, name, picture }) => {
+  return state.bag.added.reduce((cats, product) => {
+    if (product.id === id) {
+      cats.push({
+        id,
+        name,
+        picture,
+        bulk: product.bulk,
+        bulkQuantity: product.bulkQuantity,
+        price: product.price,
+        quantity: product.quantity,
+        variant: product.variant
+      })
     }
-  })
-}
+    return cats
+  }, cat)
+}, []) : []
 
 export const currentState = state => state.route.name
 
 export const isAdmin = state => state && state.user.user && state.user.user.role === 'admin'
-
-export const availableRoutes = state => {
-  const staticRoutes = ['tag', 'product', 'logout']
-  return router.options.routes.reduce((cat, {name, path}) => {
-    if (!cat) {
-      cat = [{name, path}]
-    } else {
-      if (staticRoutes.indexOf(name) === -1 && path !== '*' &&
-        (name !== 'login' || state.user.user === null) &&
-        (name !== 'admin' || isAdmin(state))) {
-        cat.push({name, path})
-      }
-    }
-    return cat
-  }, [])
-}
