@@ -1,6 +1,15 @@
 import shop from '../../../api/shop'
 import * as types from '../mutation-types'
 
+const findNextId = products => {
+  let nextId = 0
+  while (products.find(product => product.id === nextId)) {
+    nextId++
+  }
+
+  return nextId
+}
+
 // initial state
 const state = {
   all: null,
@@ -54,14 +63,15 @@ const mutations = {
   },
 
   [types.ADD_PRODUCT] (state, baseProduct) {
-    const newId = state.all.length + 1
+    const newId = findNextId(state.all)
     baseProduct.id = newId
     baseProduct.name = baseProduct.name + '(' + newId + ')'
-    state.all.push(baseProduct)
+    state.all.unshift(baseProduct)
   },
 
   [types.REMOVE_PRODUCT] (state, { id }) {
-    state.all = state.all.filter(product => product.id !== parseInt(id))
+    let product = state.all.findIndex(product => product.id === id)
+    state.all.splice(product, 1)
   },
 
   [types.REMOVE_EXTRA] (state, { id, label, extra }) {

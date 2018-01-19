@@ -63,8 +63,10 @@ export default {
     }
   },
   watch: {
-    'products.length': function () {
-      this.open()
+    'products.length': function (newLenght) {
+      if (newLenght > 0) {
+        this.open()
+      }
     }
   },
   methods: {
