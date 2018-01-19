@@ -56,7 +56,7 @@ export default {
     edit: true,
     baseProduct: 0,
     defaultProduct: {
-      id: 0,
+      id: '',
       picture: placeholderPicture,
       name: 'new product',
       price: 8.88,

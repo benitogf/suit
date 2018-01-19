@@ -118,7 +118,7 @@ export default {
         }
       }
       let page = await this.getPage(this.id)
-      if (!page) {
+      if (Object.keys(page).length === 0) {
         page = base
       }
       this.page = page
