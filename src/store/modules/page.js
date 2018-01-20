@@ -20,13 +20,12 @@ const actions = {
   },
   getPage ({ commit, state }, tag) {
     let page
-    console.log(state.pages)
     if (!state.pages[tag]) {
       page = {}
+      commit(types.SET_PAGES, { tag, page })
     } else {
       page = state.pages[tag]
     }
-    commit(types.SET_PAGES, { tag, page })
     return page
   }
 }

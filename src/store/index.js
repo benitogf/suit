@@ -40,7 +40,6 @@ const persist = new VuexPersist({
       return {}
     },
     setItem: async (key, value) => {
-      // console.log(Object.keys(value), value.products)
       await wh.hub.upsert('public', 'public')
       // console.log('state:set', value)
       return await wh.state.set(key + ':state', value)

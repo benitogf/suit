@@ -5,83 +5,116 @@ const state = {
   async set (label, data) {
     let index = 0
     let images = []
-    // console.log('STATE:SET', data)
-    for (let dt of data.products.all) {
-      let img = dt.picture
-      if (img && img.indexOf('data:image') === 0) {
-        let id = await this.session.hash(label + ':picture:' + img)
-        try {
-          images.push(id)
-          await this.item.create({ id, data: img })
-        } catch (e) {
+    if (Array.isArray(data.products.all)) {
+      for (let dt of data.products.all) {
+        let img = dt.picture
+        if (img && img.indexOf('data:image') === 0) {
+          let id = await this.session.hash('picture:' + img)
+          try {
+            images.push(id)
+            await this.item.create({ id, data: img })
+          } catch (e) {
+          }
+          data.products.all[index].picture = id
         }
-        data.products.all[index].picture = id
+        index++
       }
-      index++
     }
-    await this.item.set({ label, data }) // write
+
+    if (data.page.pages && Object.keys(data.page.pages).length) {
+      for (let page of Object.keys(data.page.pages)) {
+        if (data.page.pages[page]) {
+          for (let section of Object.keys(data.page.pages[page])) {
+            if (data.page.pages[page][section]) {
+              for (let sub of data.page.pages[page][section]) {
+                if (Array.isArray(sub.data)) {
+                  for (let delta of sub.data) {
+                    if (Array.isArray(delta.ops)) {
+                      for (let op of delta.ops) {
+                        let img = op.insert.image
+                        if (img && img.indexOf('data:image') === 0) {
+                          let id = await this.session.hash('picture:' + img)
+                          try {
+                            await this.item.create({ id, data: img })
+                          } catch (e) {
+                          }
+                          op.insert.image = id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    await this.item.set({ label, data })
     return data
   },
 
   async get (label) {
     try {
       let id = await this.session.hash(label)
-      let content = await this.item.get(id) // read
+      let content = await this.item.get(id)
       let index = 0
-      var images = []
-      // console.log('STATE:GET', content)
-      for (let dt of content.data.products.all) {
-        let img = dt.picture
-        if (img && img.indexOf('data:image') === -1) {
-          let id = img
-          images.push(id)
-          let image
-          try {
-            image = await this.item.get(id)
-          } catch (e) {
-            image = { data: '' }
+      if (Array.isArray(content.data.products.all)) {
+        for (let dt of content.data.products.all) {
+          let img = dt.picture
+          if (img && img.indexOf('data:image') === -1) {
+            let id = img
+            let image
+            try {
+              image = await this.item.get(id)
+            } catch (e) {
+              image = { data: '' }
+            }
+            content.data.products.all[index].picture = image.data
           }
-          content.data.products.all[index].picture = image.data
+          index++
         }
-        index++
       }
+
+      if (content.data.page.pages && Object.keys(content.data.page.pages).length) {
+        for (let page of Object.keys(content.data.page.pages)) {
+          if (content.data.page.pages[page]) {
+            for (let section of Object.keys(content.data.page.pages[page])) {
+              if (content.data.page.pages[page][section]) {
+                for (let sub of content.data.page.pages[page][section]) {
+                  if (Array.isArray(sub.data)) {
+                    for (let delta of sub.data) {
+                      if (Array.isArray(delta.ops)) {
+                        for (let op of delta.ops) {
+                          let img = op.insert.image
+                          if (img && img.indexOf('data:image') === -1) {
+                            let id = img
+                            let image
+                            try {
+                              image = await this.item.get(id)
+                            } catch (e) {
+                              image = { data: '' }
+                            }
+                            op.insert.image = image.data
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
       return content.data
     } catch (e) {
       return {}
     }
-  },
-
-  async update (label, images) {
-    let store
-    try {
-      let id = await this.session.hash(label + ':images')
-      store = await this.item.get(id)
-    } catch (e) {
-      store = { data: images }
-    }
-    let trash = store.data.filter((nf) => images.indexOf(nf) === -1)
-    await this.item.set({
-      label: label + ':images',
-      data: images.concat(trash)
-    })
-  },
-
-  async clean (label, images) {
-    let id = await this.session.hash(label + ':images')
-    let trash = []
-    try {
-      let store = await this.item.get(id)
-      for (let img of store.data) {
-        if (images.indexOf(img) === -1) {
-          trash.push(img)
-        }
-      }
-      await this.item.delSome(trash)
-      await this.item.set({ id, data: images })
-    } catch (e) {
-      await this.item.set({ id, data: trash })
-    }
   }
+
 }
 
 class State extends Delta {

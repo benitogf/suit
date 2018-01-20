@@ -24,18 +24,24 @@
         </md-card-header>
       </md-card-area>
 
-      <md-card-content v-if="page && page.form">
-        <md-list v-if="isAdmin">
-          <md-list-item>
-            <span></span>
-            <md-switch v-model="edit"></md-switch>
-          </md-list-item>
-        </md-list>
-        <md-list-form :fields="page.form"
+      <md-card-content v-if="page">
+        <md-layout md-align="end">
+          <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialogSub({ })">
+            add field
+          </md-button>
+          <md-list v-if="isAdmin">
+            <md-list-item>
+              <span></span>
+              <md-switch v-model="edit"></md-switch>
+            </md-list-item>
+          </md-list>
+        </md-layout>
+        <md-list-form :fields="page"
           :edit="edit && isAdmin"
           :level="0"
           @sub="openDialogSub"
-          @plus="plusForm">
+          @plus="plus"
+          @fire="fire">
         </md-list-form>
       </md-card-content>
 
@@ -79,6 +85,9 @@ export default {
       'getPage',
       'setPage'
     ]),
+    fire () {
+      this.setPage({ tag: this.id, page: this.page })
+    },
     openDialogSub (ref) {
       this.prompt.title = 'Create field'
       if (ref.id) {
@@ -88,22 +97,23 @@ export default {
       this.$refs.page.open()
       this.ref = ref.id || 'root'
     },
-    plusForm (data) {
+    plus (data) {
       let page = Object.assign({}, this.page)
-      let form = _.findIndex(page.form[data.root], ['id', data.id])
-      page.form[data.root][form].data.push({})
+      let form = _.findIndex(page[data.root], ['id', data.id])
+      page[data.root][form].data.push({})
       this.setPage({ tag: this.id, page: page })
     },
     async onCloseDialog (ref) {
       if (this.prompt.value && ref === 'ok') {
         let page = Object.assign({}, this.page)
-        if (!page.form[this.ref]) {
-          page.form[this.ref] = []
+        if (!page[this.ref]) {
+          page[this.ref] = []
         }
-        if (!page.form[this.prompt.value]) {
-          page.form[this.prompt.value] = []
+        if (!page[this.prompt.value]) {
+          page[this.prompt.value] = []
         }
-        page.form[this.ref].push({
+        page[this.ref].push({
+          parent: this.ref,
           id: this.prompt.value,
           data: [{}]
         })
@@ -113,9 +123,7 @@ export default {
     },
     async reload () {
       let base = {
-        form: {
-          root: []
-        }
+        root: []
       }
       let page = await this.getPage(this.id)
       if (Object.keys(page).length === 0) {
@@ -149,8 +157,5 @@ export default {
   & > .md-button {
     margin: 0;
   }
-}
-.vue-quill .ql-editor {
-  box-shadow: 0px 1.6px 10.6px rgba(221, 221, 221, 0.71);
 }
 </style>

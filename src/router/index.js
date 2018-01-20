@@ -2,9 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/components/login'
 import logout from '@/components/logout'
-import home from '@/components/home'
 import tag from '@/components/tag'
-import about from '@/components/about'
 import shop from '@/components/shop'
 import product from '@/components/product-view'
 import nah from '@/components/404'
@@ -16,24 +14,14 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: about
-    },
-    {
-      path: '/shop',
       name: 'shop',
-      component: shop,
-      props: true
+      component: shop
     },
     {
       path: '/product/:id',
       name: 'product',
-      component: product
+      component: product,
+      props: true
     },
     {
       path: '/login',

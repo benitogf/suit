@@ -50,7 +50,7 @@ const actions = {
   },
   logout ({ commit }) {
     commit(types.LOGOUT)
-    router.push({ name: 'home' })
+    router.push({ name: 'shop' })
   }
 }
 
@@ -59,7 +59,7 @@ const mutations = {
   [types.LOGIN] (state, { credentials }) {
     state.user = credentials
     state.error = ''
-    Vue.nextTick(() => router.push({ name: 'home' }))
+    Vue.nextTick(() => router.push({ name: 'shop' }))
   },
   [types.SET_PROFILE] (state, { data }) {
     state.profile = data
@@ -73,8 +73,7 @@ const mutations = {
   [types.LOGOUT] (state) {
     state.user = null
     state.profile = null
-    console.log(state)
-    router.push({ name: 'home' })
+    router.push({ name: 'shop' })
   }
 }
 

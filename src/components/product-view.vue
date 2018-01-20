@@ -1,7 +1,7 @@
 <template>
   <md-layout md-column class="content">
     <md-subheader>
-      <router-link class="md-button" exact to="/shop">
+      <router-link class="md-button" exact to="/">
         <md-icon md-src="left-arrow">left-arrow</md-icon>
       </router-link>
       <md-layout md-align="end" md-gutter md-flex>

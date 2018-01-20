@@ -34,9 +34,21 @@
 
         <md-list v-if="isAdmin">
           <md-list-item>
-            <span></span><md-switch v-model="edit" id="edit-sidenav-toggle" name="edit-sidenav-toggle"></md-switch>
+            <md-layout md-align="end">
+            <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialog(false)">
+              add tag
+            </md-button>
+            <md-list>
+              <md-list-item>
+                <span></span>
+                <md-switch v-model="edit"></md-switch>
+              </md-list-item>
+            </md-list>
+            </md-layout>
           </md-list-item>
         </md-list>
+
+        <md-list-tree :edit="edit && isAdmin" :tags="tags" @add="openDialog"></md-list-tree>
 
         <md-list v-if="availableRoutes" class="sidenav-static-links">
           <md-list-item v-for="r in availableRoutes" :key="r.name">
@@ -45,8 +57,6 @@
             </router-link>
           </md-list-item>
         </md-list>
-
-        <md-list-tree :edit="edit && isAdmin" :tags="tags" @action="openDialog"></md-list-tree>
 
       </md-sidenav>
 
@@ -73,8 +83,10 @@
 </template>
 
 <script>
+// import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
 import bag from '@/components/bag.vue'
+import router from '@/router'
 
 export default {
   name: 'app',
@@ -90,7 +102,7 @@ export default {
     })
   },
   data: () => ({
-    edit: true,
+    edit: false,
     loading: true,
     prompt: {
       title: 'Create tag',
@@ -134,7 +146,9 @@ export default {
       this.$refs.leftSidenav.toggle()
     },
     closeSidenav () {
-      this.$refs.leftSidenav.close()
+      if (this.$refs.leftSidenav) {
+        this.$refs.leftSidenav.close()
+      }
     },
     toggleRightSidenav () {
       this.$refs.rightSidenav.toggle()
@@ -157,6 +171,12 @@ export default {
     const self = this
     self.$store._vm.$root.$on('storageReady', () => {
       self.loading = false
+      router.beforeEach((to, from, next) => {
+        // Vue.nextTick(() => {
+        self.closeSidenav()
+        next()
+        // })
+      })
     })
   }
 }

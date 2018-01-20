@@ -13,7 +13,7 @@
         <form novalidate @submit.stop.prevent.native="login(user)">
           <md-input-container>
             <label>Username</label>
-            <md-input v-model="user.account" @keyup.native.13="login(user)"></md-input>
+            <md-input autofocus ref="username" v-model="user.account" @keyup.native.13="login(user)"></md-input>
           </md-input-container>
           <md-input-container>
             <label>Password</label>
@@ -58,7 +58,7 @@ export default {
   ]),
   mounted () {
     if (this.currentUser) {
-      router.push({ name: 'home' })
+      router.push({ name: 'shop' })
     }
   }
 }

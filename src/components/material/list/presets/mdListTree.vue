@@ -5,26 +5,21 @@
     <md-list-item v-for="(tag, index) in tags[tag]" :key="index" class="md-list-tree-item">
 
       <span v-if="edit" v-html="tag"></span>
+      <md-layout v-if="edit" md-align="end">
+        <md-button @click="action('add', tag)" class="md-primary md-icon-button"><i class="material-icons">add_circle</i></md-button>
+        <md-button @click="action('del', tag)" class="md-warn md-icon-button"><i class="material-icons">remove_circle</i></md-button>
+      </md-layout>
       <router-link v-if="!edit" exact :to="'/tag/' + tag" v-html="tag"></router-link>
       <md-list-expand :edit="true" v-if="tags[tag] instanceof Array">
 
           <md-list-tree :edit="edit"
             :tags="tags"
-            @action="fireClickEvent"
+            @action="action"
             :tag="tag">
           </md-list-tree>
 
       </md-list-expand>
 
-    </md-list-item>
-
-    <md-list-item v-if="edit" v-for="(tag, index) in tags[tag]" :key="index+tag"
-      @click="fireClickEvent(tag)">
-      <md-icon md-src="tag"></md-icon>{{tag}}
-    </md-list-item>
-
-    <md-list-item v-if="edit && tag === 'root'" @click="fireClickEvent()">
-      <md-icon md-src="tag"></md-icon>
     </md-list-item>
 
   </md-list>
@@ -49,9 +44,9 @@
       debounce: false
     }),
     methods: {
-      fireClickEvent (type) {
+      action (action, type) {
         if (!this.debounce) {
-          this.$emit('action', type)
+          this.$emit(action, type)
         }
       }
     }

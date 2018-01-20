@@ -5,14 +5,30 @@
     <md-list-item v-for="(field, index) in fields[root]" :key="index" :class="'level'+level">
 
       <span class="label" v-html="field.id"></span>
-      <md-list-expand :edit="edit && user.role === 'admin'" v-if="fields[field.id] instanceof Array">
 
-        <md-list-item class="md-list-form-plus" v-if="edit && user.role === 'admin'" @click="fireClickEvent({ action: 'plus', root,  id: field.id })">
-          <md-icon md-src="tag"></md-icon>{{field.id}}
-        </md-list-item>
+      <md-list-expand :md-expand-multiple="true" :edit="edit && isAdmin" v-if="fields[field.id] instanceof Array">
+
+        <md-toolbar v-if="edit" class="md-dense">
+          <md-button class="md-primary md-raised" v-if="edit && isAdmin" @click="fireClickEvent({ action: 'plus', root,  id: field.id })">
+            <i class="material-icons">add_box</i>
+          </md-button>
+
+          <md-button class="md-accent md-raised" v-if="edit && isAdmin" @click="fireClickEvent({ action: 'del', root,  id: field.id })">
+            <i class="material-icons">remove_circle</i>
+          </md-button>
+
+          <md-button class="md-raised" v-if="edit && root === 'root' && isAdmin" @click="fireClickEvent({ action: 'sub', id: field.id })">
+            <i class="material-icons">add_box</i></md-icon><i class="material-icons">subdirectory_arrow_right</i>
+          </md-button>
+
+          <md-button md-align="end" class="md-warn md-raised" v-if="edit && isAdmin" @click="fireClickEvent({ action: 'sub', id: field.id })">
+            <i class="material-icons">clear</i></md-icon>
+          </md-button>
+
+        </md-toolbar>
 
         <md-list-item v-for="(item, index) in field.data" :key="index" class="md-list-form-item">
-          <quill :id="field.id + index" :edit="edit && user.role === 'admin'" class="quill-container"></quill>
+          <quill @input="fire" v-model="field.data[index]" :id="field.parent + ':' + field.id + ':' + index" :edit="edit && isAdmin" class="quill-container"></quill>
         </md-list-item>
 
         <md-list-form :edit="edit"
@@ -20,19 +36,12 @@
           :level="level+1"
           @sub="fireClickEvent"
           @plus="fireClickEvent"
+          @fire="fire"
           :root="field.id">
         </md-list-form>
 
-        <md-list-item v-if="edit && root === 'root' && user.role === 'admin'" @click="fireClickEvent({ action: 'sub', id: field.id })">
-          <md-icon md-src="tag"></md-icon>{{field.id}}
-        </md-list-item>
-
       </md-list-expand>
 
-    </md-list-item>
-
-    <md-list-item v-if="edit && root === 'root' && user.role === 'admin'" @click="fireClickEvent({ action: 'sub' })">
-      <md-icon md-src="tag"></md-icon>
     </md-list-item>
 
   </md-list>
@@ -58,7 +67,7 @@
     },
     computed: {
       ...mapGetters({
-        user: 'currentUser'
+        isAdmin: 'isAdmin'
       })
     },
     data: () => ({
@@ -71,6 +80,10 @@
           console.log(data)
           this.$emit(data.action, data)
         }
+      },
+      fire () {
+        console.log('fire')
+        this.$emit('fire')
       }
     }
   }
@@ -95,5 +108,8 @@
         font-size: 1.1rem;
       }
     }
+  }
+  .material-icons {
+    vertical-align: middle;
   }
 </style>
