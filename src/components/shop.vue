@@ -41,7 +41,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Product from './product.vue'
-import placeholderPicture from '../../api/pictures/default'
+// import placeholderPicture from '../../api/pictures/default'
 
 export default {
   name: 'Shop',
@@ -57,7 +57,7 @@ export default {
     baseProduct: 0,
     defaultProduct: {
       id: '',
-      picture: placeholderPicture,
+      picture: '',
       name: 'new product',
       price: 8.88,
       basePrice: 8.88,

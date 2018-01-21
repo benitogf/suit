@@ -27,13 +27,9 @@ export default {
     ...mapGetters({
       product: 'product',
       isAdmin: 'isAdmin'
-    }),
-    src () {
-      return id => '../static/' + id + '.jpg'
-    }
+    })
   },
   data: () => ({
-    extras: ['variant', 'bulk'],
     edit: true
   }),
   created () {

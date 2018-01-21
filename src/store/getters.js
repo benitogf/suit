@@ -1,6 +1,6 @@
 import router from '@/router'
 
-const excludedRoutes = ['tag', 'product']
+const excludedRoutes = ['page', 'product']
 
 export const availableRoutes = state => router.options.routes.reduce((cat, {name, path}) => {
   if (excludedRoutes.indexOf(name) === -1 && path !== '*' &&

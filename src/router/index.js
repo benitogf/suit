@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/components/login'
 import logout from '@/components/logout'
-import tag from '@/components/tag'
+import page from '@/components/page-view'
 import shop from '@/components/shop'
 import product from '@/components/product-view'
 import nah from '@/components/404'
@@ -29,9 +29,9 @@ export default new Router({
       component: login
     },
     {
-      path: '/tag/:id',
-      name: 'tag',
-      component: tag,
+      path: '/page/:id',
+      name: 'page',
+      component: page,
       props: true
     },
     {

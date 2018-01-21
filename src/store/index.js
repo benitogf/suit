@@ -12,7 +12,7 @@ import wh from '@/lib/session'
 
 Vue.use(Vuex)
 
-const filteredMutations = ['CLEAR_BAG', 'SELECT_PRODUCT', 'route/ROUTE_CHANGED']
+const filteredMutations = ['CLEAR_BAG', 'SELECT_PRODUCT', 'SELECT_PAGE']
 
 const persistEmitter = () => {
   return store => {

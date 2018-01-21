@@ -1,11 +1,11 @@
 <template>
 
-  <md-layout md-row md-column-small class="content tag">
+  <md-layout md-row md-column-small class="content page">
 
     <md-card>
 
       <md-dialog-prompt
-        v-if="user"
+        v-if="isAdmin"
         :md-theme="prompt.theme"
         :md-title="prompt.title"
         :md-ok-text="prompt.ok"
@@ -27,7 +27,7 @@
       <md-card-content v-if="page">
         <md-layout md-align="end">
           <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialogSub({ })">
-            add field
+            add content
           </md-button>
           <md-list v-if="isAdmin">
             <md-list-item>
@@ -36,8 +36,8 @@
             </md-list-item>
           </md-list>
         </md-layout>
-        <md-list-form :fields="page"
-          :edit="edit && isAdmin"
+        <md-list-form :edit="edit && isAdmin"
+          :mutating="mutating"
           :level="0"
           @sub="openDialogSub"
           @plus="plus"
@@ -52,22 +52,21 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import _ from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
 export default {
-  name: 'tag',
-  props: ['id'],
+  name: 'Page',
+  props: {
+    page: Object,
+    id: String
+  },
   computed: {
     ...mapGetters({
-      user: 'currentUser',
-      profile: 'profile',
       isAdmin: 'isAdmin'
     })
   },
   data: () => ({
-    page: null,
     edit: true,
+    mutating: false,
     prompt: {
       title: 'Create tag',
       ok: 'Done',
@@ -82,14 +81,15 @@ export default {
   }),
   methods: {
     ...mapActions([
-      'getPage',
-      'setPage'
+      'setPage',
+      'subPage',
+      'plusPage'
     ]),
     fire () {
       this.setPage({ tag: this.id, page: this.page })
     },
     openDialogSub (ref) {
-      this.prompt.title = 'Create field'
+      this.prompt.title = 'Create content'
       if (ref.id) {
         this.prompt.title += ' in ' + ref.id
       }
@@ -98,49 +98,23 @@ export default {
       this.ref = ref.id || 'root'
     },
     plus (data) {
-      let page = Object.assign({}, this.page)
-      let form = _.findIndex(page[data.root], ['id', data.id])
-      page[data.root][form].data.push({})
-      this.setPage({ tag: this.id, page: page })
-    },
-    async onCloseDialog (ref) {
-      if (this.prompt.value && ref === 'ok') {
-        let page = Object.assign({}, this.page)
-        if (!page[this.ref]) {
-          page[this.ref] = []
-        }
-        if (!page[this.prompt.value]) {
-          page[this.prompt.value] = []
-        }
-        page[this.ref].push({
-          parent: this.ref,
-          id: this.prompt.value,
-          data: [{}]
-        })
-        await this.setPage({ tag: this.id, page: page })
-        await this.reload()
-      }
-    },
-    async reload () {
-      let base = {
-        root: []
-      }
-      let page = await this.getPage(this.id)
-      if (Object.keys(page).length === 0) {
-        page = base
-      }
-      this.page = page
-    }
-  },
-  watch: {
-    async id () {
-      Vue.nextTick(async () => {
-        await this.reload()
+      this.mutating = true
+      this.plusPage({ tag: this.id, root: data.root, id: data.id })
+      this.$nextTick(() => {
+        this.mutating = false
       })
+    },
+    onCloseDialog (ref) {
+      if (this.prompt.value && ref === 'ok') {
+        this.mutating = true
+        this.subPage({ tag: this.id, sub: this.prompt.value, parent: this.ref })
+        this.$nextTick(() => {
+          this.mutating = false
+        })
+      }
     }
   },
-  async mounted () {
-    await this.reload()
+  mounted () {
   }
 }
 </script>

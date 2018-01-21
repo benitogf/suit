@@ -9,7 +9,7 @@
         <md-button @click="action('add', tag)" class="md-primary md-icon-button"><i class="material-icons">add_circle</i></md-button>
         <md-button @click="action('del', tag)" class="md-warn md-icon-button"><i class="material-icons">remove_circle</i></md-button>
       </md-layout>
-      <router-link v-if="!edit" exact :to="'/tag/' + tag" v-html="tag"></router-link>
+      <router-link v-if="!edit" exact :to="'/page/' + tag" v-html="tag"></router-link>
       <md-list-expand :edit="true" v-if="tags[tag] instanceof Array">
 
           <md-list-tree :edit="edit"

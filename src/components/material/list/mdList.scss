@@ -179,7 +179,7 @@
     justify-content: space-between;
     flex: 1;
     position: relative;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 400;
     text-align: left;
     text-transform: none;
@@ -245,48 +245,48 @@
   overflow: hidden;
   transform: translate3D(0, 0, 0);
 
-  &:before,
-  &:after {
-    height: 1px;
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: 3;
-    transition: $swift-ease-out;
-    content: " ";
-  }
-
-  &:before {
-    top: 0;
-  }
-
-  &:after {
-    bottom: 0;
-  }
+  // &:before,
+  // &:after {
+  //   height: 1px;
+  //   position: absolute;
+  //   right: 0;
+  //   left: 0;
+  //   z-index: 3;
+  //   transition: $swift-ease-out;
+  //   content: " ";
+  // }
+  //
+  // &:before {
+  //   top: 0;
+  // }
+  //
+  // &:after {
+  //   bottom: 0;
+  // }
 
   &.md-active {
     position: relative;
 
-    &:before,
-    &:after {
-      background-color: rgba(#000, .12);
-    }
+    // &:before,
+    // &:after {
+    //   background-color: rgba(#000, .12);
+    // }
 
-    &:first-of-type {
-      &:before {
-        background: none;
-      }
-    }
+    // &:first-of-type {
+    //   &:before {
+    //     background: none;
+    //   }
+    // }
 
-    &:last-of-type {
-      &:after {
-        background: none;
-      }
-    }
+    // &:last-of-type {
+    //   &:after {
+    //     background: none;
+    //   }
+    // }
 
-    &.md-active + .md-active:before {
-      background: none;
-    }
+    // &.md-active + .md-active:before {
+    //   background: none;
+    // }
 
     > .md-list-item-container .md-list-expand-indicator {
       transform: rotateZ(180deg) translate3D(0, 0, 0);
@@ -360,13 +360,33 @@
 .md-list-form {
   .md-list-item-expand {
     &:not(.level1) {
-      margin-bottom: 3px;
+      margin-bottom: 6px;
+      margin-top: 30px;
+      margin-left: 15px;
+      margin-right: 15px;
     }
     & > .md-list-item-container {
       background: rgba(0, 150, 136, 0.4392156862745098) !important;
     }
     &.md-disabled > .md-list-item-container {
       background: #fff !important;
+      &:after {
+        height: 1px;
+        position: absolute;
+        right: 0;
+        left: 0;
+        top: 42px;
+        z-index: 3;
+        transition: $swift-ease-out;
+        content: " ";
+        background-color: rgba(#000, .12);
+      }
+      & > span {
+        margin-bottom: 25px;
+      }
+    }
+    &.md-disabled.level1 {
+      margin-left: 2em;
     }
   }
   .md-list-item:not(.md-list-item-expand) .md-list-item-container {

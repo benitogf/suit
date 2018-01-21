@@ -1,25 +1,29 @@
 // @flow
 import Vue from 'vue'
-// import router from '../../router'
+import api from '../../../api/tag'
 import VueResource from 'vue-resource'
 import * as types from '../mutation-types'
 
 Vue.use(VueResource)
 
-// initial state
-const state = {
-  tags: {
-    root: []
-  }
+const getters = {
+  tags: state => state.tags
 }
 
-// getters
-const getters = {
-  getTags: state => state.tags
+// initial state
+const state = {
+  tags: null
 }
 
 // actions
 const actions = {
+  getTags ({ commit }) {
+    if (!state.tags) {
+      api.getTags(tags => {
+        commit(types.SET_TAGS, { tags })
+      })
+    }
+  },
   setTags ({ commit }, tags) {
     commit(types.SET_TAGS, { tags })
   }

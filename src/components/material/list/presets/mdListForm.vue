@@ -2,42 +2,44 @@
 
   <md-list class="md-dense md-list-form">
 
-    <md-list-item v-for="(field, index) in fields[root]" :key="index" :class="'level'+level">
+    <md-list-item v-for="(section, index) in page[root]" :key="index" :class="'level'+level">
 
-      <span class="label" v-html="field.id"></span>
+      <span class="label" v-html="section.id"></span>
 
-      <md-list-expand :md-expand-multiple="true" :edit="edit && isAdmin" v-if="fields[field.id] instanceof Array">
+      <md-list-expand :md-expand-multiple="true" :edit="edit && isAdmin" :mutating="mutating" v-if="page[section.id] instanceof Array">
 
-        <md-toolbar v-if="edit" class="md-dense">
-          <md-button class="md-primary md-raised" v-if="edit && isAdmin" @click="fireClickEvent({ action: 'plus', root,  id: field.id })">
+        <md-toolbar v-if="edit && isAdmin" class="md-dense">
+          <md-button class="md-primary md-raised" @click="action({ action: 'plus', root,  id: section.id })">
             <i class="material-icons">add_box</i>
           </md-button>
 
-          <md-button class="md-accent md-raised" v-if="edit && isAdmin" @click="fireClickEvent({ action: 'del', root,  id: field.id })">
-            <i class="material-icons">remove_circle</i>
+          <md-button class="md-raised" v-if="root === 'root'" @click="action({ action: 'sub', id: section.id })">
+            <i class="material-icons">add_box</i>
+            <i class="material-icons">subdirectory_arrow_right</i>
           </md-button>
 
-          <md-button class="md-raised" v-if="edit && root === 'root' && isAdmin" @click="fireClickEvent({ action: 'sub', id: field.id })">
-            <i class="material-icons">add_box</i></md-icon><i class="material-icons">subdirectory_arrow_right</i>
-          </md-button>
+          <md-layout md-align="end">
+            <md-button class="md-accent md-raised" :disabled="section.data.length === 1" @click="action({ action: 'del', root,  id: section.id })">
+              <i class="material-icons">remove_circle</i>
+            </md-button>
 
-          <md-button md-align="end" class="md-warn md-raised" v-if="edit && isAdmin" @click="fireClickEvent({ action: 'sub', id: field.id })">
-            <i class="material-icons">clear</i></md-icon>
-          </md-button>
+            <md-button class="md-warn md-raised" @click="action({ action: 'sub', id: section.id })">
+              <i class="material-icons">clear</i></md-icon>
+            </md-button>
+          </md-layout>
 
         </md-toolbar>
 
-        <md-list-item v-for="(item, index) in field.data" :key="index" class="md-list-form-item">
-          <quill @input="fire" v-model="field.data[index]" :id="field.parent + ':' + field.id + ':' + index" :edit="edit && isAdmin" class="quill-container"></quill>
+        <md-list-item v-for="(item, index) in section.data" :key="index" class="md-list-form-item">
+          <quill @input="fire" v-model="section.data[index]" :id="section.parent + ':' + section.id + ':' + index" :edit="edit && isAdmin" class="quill-container"></quill>
         </md-list-item>
 
         <md-list-form :edit="edit"
-          :fields="fields"
           :level="level+1"
-          @sub="fireClickEvent"
-          @plus="fireClickEvent"
+          @sub="action"
+          @plus="action"
           @fire="fire"
-          :root="field.id">
+          :root="section.id">
         </md-list-form>
 
       </md-list-expand>
@@ -55,34 +57,29 @@
     name: 'md-list-form',
     props: {
       level: Number,
-      fields: {
-        type: Object,
-        required: true
-      },
       root: {
         type: String,
         default: 'root'
       },
-      edit: Boolean
+      edit: Boolean,
+      mutating: Boolean
     },
     computed: {
       ...mapGetters({
-        isAdmin: 'isAdmin'
+        isAdmin: 'isAdmin',
+        page: 'page'
       })
     },
     data: () => ({
       debounce: false
     }),
     methods: {
-      fireClickEvent (data) {
-        console.log(data)
+      action (data) {
         if (!this.debounce && data) {
-          console.log(data)
           this.$emit(data.action, data)
         }
       },
       fire () {
-        console.log('fire')
         this.$emit('fire')
       }
     }

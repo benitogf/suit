@@ -20,7 +20,7 @@
         </md-button>
         <md-layout md-align="end">
           <md-button class="md-icon-button" @click.native="toggleRightSidenav">
-              <i class="material-icons">shopping_basket</i>
+              <i class="material-icons">local_mall</i>
           </md-button>
         </md-layout>
       </md-whiteframe>
@@ -48,7 +48,7 @@
           </md-list-item>
         </md-list>
 
-        <md-list-tree :edit="edit && isAdmin" :tags="tags" @add="openDialog"></md-list-tree>
+        <md-list-tree v-if="tags" :edit="edit && isAdmin" :tags="tags" @add="openDialog"></md-list-tree>
 
         <md-list v-if="availableRoutes" class="sidenav-static-links">
           <md-list-item v-for="r in availableRoutes" :key="r.name">
@@ -63,7 +63,10 @@
       <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav">
 
         <md-toolbar class="md-right-close">
-          <div class="md-title">Your Bag</div>
+          <div class="md-title">
+            <i class="material-icons">local_mall</i>
+            <i class="material-icons">content_paste</i>
+          </div>
           <md-layout md-align="end">
             <md-button class="md-icon-button" @click.native="closeRightSidenav">
               <md-icon md-src="close">close</md-icon>
@@ -83,7 +86,6 @@
 </template>
 
 <script>
-// import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
 import bag from '@/components/bag.vue'
 import router from '@/router'
@@ -96,7 +98,7 @@ export default {
     ...mapGetters({
       user: 'currentUser',
       state: 'currentState',
-      tags: 'getTags',
+      tags: 'tags',
       availableRoutes: 'availableRoutes',
       isAdmin: 'isAdmin'
     })
@@ -170,12 +172,12 @@ export default {
   mounted () {
     const self = this
     self.$store._vm.$root.$on('storageReady', () => {
+      // console.log(JSON.stringify(self.tags))
+      this.$store.dispatch('getTags')
       self.loading = false
       router.beforeEach((to, from, next) => {
-        // Vue.nextTick(() => {
         self.closeSidenav()
         next()
-        // })
       })
     })
   }
