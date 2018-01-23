@@ -1,7 +1,16 @@
 /**
  * Mocking client-server processing
  */
-import pictures from './pictures'
+// import pictures from './pictures'
+const pictures = {
+  apple: '',
+  orange: '',
+  tomato: '',
+  blueberry: '',
+  durian: '',
+  dragon: '',
+  kiwi: ''
+}
 
 const _products = [
   {

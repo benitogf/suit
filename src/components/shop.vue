@@ -1,5 +1,5 @@
 <template>
-  <md-layout md-column class="content">
+  <md-layout md-column class="content shop">
 
     <md-dialog ref="productForm" v-if="edit && isAdmin">
       <md-dialog-title>add new product</md-dialog-title>
@@ -20,18 +20,14 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <md-subheader v-if="isAdmin">
+    <md-whiteframe v-if="isAdmin" md-elevation="0" class="product-admin">
       <md-layout md-align="end">
         <md-button v-if="edit" @click="productForm()" class="md-button md-primary">Add product</md-button>
-        <md-list>
-          <md-list-item>
-            <md-switch v-model="edit"></md-switch>
-          </md-list-item>
-        </md-list>
+        <md-switch v-model="edit"></md-switch>
       </md-layout>
-    </md-subheader>
+    </md-whiteframe>
 
-    <md-layout md-flex class="product-list">
+    <md-layout class="product-list">
       <product class="product" v-for="product in products" :key="product.id" :showActions="true" :edit="edit" :product="product"></product>
     </md-layout>
 
@@ -41,7 +37,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Product from './product.vue'
-import placeholderPicture from '../../api/pictures/default'
 
 export default {
   name: 'Shop',
@@ -57,7 +52,7 @@ export default {
     baseProduct: 0,
     defaultProduct: {
       id: '',
-      picture: placeholderPicture,
+      picture: '',
       name: 'new product',
       price: 8.88,
       basePrice: 8.88,
@@ -84,7 +79,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.$store.dispatch('getProducts')
   }
 }
@@ -92,6 +87,16 @@ export default {
 
 <style lang="scss" scoped>
 @import 'src/components/material/core/stylesheets/variables.scss';
+
+.product-admin {
+  width: 99%;
+  padding-right: 15px;
+  padding-top: 8px;
+}
+
+.shop {
+  flex-direction: initial;
+}
 .md-menu-content {
   max-height: 300px;
 }
@@ -112,10 +117,6 @@ export default {
   }
 }
 
-.product-list {
-  flex: 0;
-}
-
 .product {
   padding: 1rem;
   flex: 1;
@@ -124,7 +125,7 @@ export default {
 
   @media (max-width: $breakpoint-small) {
     max-width: 100vw;
-    min-width: 100vw;
+    min-width: 94vw;
   }
 
   @media (min-width: $breakpoint-small+1) {

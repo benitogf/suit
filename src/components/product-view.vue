@@ -1,7 +1,7 @@
 <template>
   <md-layout md-column class="content">
     <md-subheader>
-      <router-link class="md-button" exact to="/shop">
+      <router-link class="md-button" exact to="/">
         <md-icon md-src="left-arrow">left-arrow</md-icon>
       </router-link>
       <md-layout md-align="end" md-gutter md-flex>
@@ -27,17 +27,15 @@ export default {
     ...mapGetters({
       product: 'product',
       isAdmin: 'isAdmin'
-    }),
-    src () {
-      return id => '../static/' + id + '.jpg'
-    }
+    })
   },
   data: () => ({
-    extras: ['variant', 'bulk'],
     edit: true
   }),
   created () {
-    this.$store.dispatch('getProduct', parseInt(this.$route.params.id))
+    // route params don't propagate due to the store filter for the route mutation
+    // this.$store.dispatch('getProduct', parseInt(this.$route.params.id))
+    this.$store.dispatch('getProduct', parseInt(this.$route.path.replace('/product/', '')))
   }
 }
 </script>

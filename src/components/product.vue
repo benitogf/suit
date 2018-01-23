@@ -6,9 +6,6 @@
     <md-dialog ref="bagForm" v-if="!edit || !isAdmin">
       <md-dialog-title>{{ product.name }}</md-dialog-title>
       <md-dialog-content>
-        <md-layout md-align="end">
-          <div class="md-subhead">{{ product.price | currency }}</div>
-        </md-layout>
         <form>
           <md-layout md-flex="100" v-if="product[extra+'s'] && product[extra+'s'].length > 1" v-for="extra in extras" :key="extra" class="extra">
             <md-input-container>
@@ -19,10 +16,18 @@
             </md-input-container>
           </md-layout>
         </form>
+        <md-layout md-align="end">
+          <div class="md-subhead bag-price">{{ product.price | currency }}</div>
+        </md-layout>
       </md-dialog-content>
       <md-dialog-actions>
-        <md-button class="md-primary" @click="closeBagForm(false)">cancel</md-button>
-        <md-button class="md-primary" @click="closeBagForm(true)">add to bag</md-button>
+        <md-button class="md-primary" @click="closeBagForm(false)">
+          <i class="material-icons">undo</i>
+        </md-button>
+        <md-button class="md-accent md-raised" @click="closeBagForm(true)">
+          <i class="material-icons">local_mall</i>
+          <i class="material-icons">check</i>
+        </md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -136,13 +141,16 @@
         'product-view': !showActions
       }">
       <md-card-actions>
-        <md-layout>
-          <div class="md-title">{{ product.name }}</div>
-          <div class="md-subhead">{{ product.price | currency }}</div>
+        <md-layout md-row>
+          <div class="md-title product-title">{{ product.name }}</div>
+          <div class="md-subhead product-price">{{ product.price | currency }}</div>
         </md-layout>
         <md-button v-if="!edit || !isAdmin" class="md-button md-raised md-primary"
           :disabled="!product.inventory"
-          @click="bagForm()">add to bag</md-button>
+          @click="bagForm()">
+          <i class="material-icons">local_mall</i>
+          <i class="material-icons">exposure_plus_1</i>
+        </md-button>
         <md-menu v-if="edit && isAdmin">
           <md-button class="md-icon-button md-primary" md-menu-trigger><i class="material-icons">more_vert</i></md-button>
           <md-menu-content>
@@ -158,12 +166,13 @@
 
       <md-card-media>
         <router-link exact :to="'/product/'+product.id">
-          <md-image :md-src="product.picture" :alt="product.name"></md-image>
+          <md-image v-if="product.picture" :md-src="product.picture" :alt="product.name"></md-image>
+          <i v-else class="material-icons product-picture">wallpaper</i>
         </router-link>
       </md-card-media>
 
       <md-card-content>
-        <p class="product-view">{{ product.description }}</p>
+        <p class="product-description">{{ product.description }}</p>
       </md-card-content>
     </md-card>
 
@@ -222,10 +231,7 @@ export default {
       state: 'currentState',
       profile: 'profile',
       isAdmin: 'isAdmin'
-    }),
-    src () {
-      return id => '../static/' + id + '.jpg'
-    }
+    })
   },
   watch: {
     'product.variant': calculatePrice,
@@ -324,22 +330,30 @@ export default {
 <style lang="scss" scoped>
 @import 'src/components/material/core/stylesheets/variables.scss';
 
-.md-title {
-  font-size: 15px !important;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.md-subhead {
-  line-height: 32px;
-  margin-left: 10px;
-}
-
 .extra ul {
   flex: 1;
 }
 
 .product {
+  .product-title {
+    font-size: 15px !important;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .product-price {
+    line-height: 32px;
+    margin-left: 10px;
+  }
+  .product-picture {
+    font-size: 13em;
+    color: #ccc;
+    background-color: rgba(0, 0, 0, .12);
+    width: 100%;
+    height: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+  }
   &:not(.product-view) {
     flex: 1;
   }
@@ -356,11 +370,19 @@ export default {
 .product-view {
   overflow-y: hidden;
   display: table;
+  min-width: 320px;
 }
 
 .product-margin {
-  // flex: 0;
-  // display: initial;
   justify-content: center;
+}
+
+.bag-price {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.material-icons {
+  vertical-align: middle;
 }
 </style>

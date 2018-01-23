@@ -9,7 +9,7 @@
     <md-button v-if="edit" type="button" class="md-button-ghost" @click="toggleExpandList"></md-button>
 
     <div class="md-list-expand" ref="expand" :class="expandClasses" :style="expandStyles">
-      <slot v-if="active || !edit || tree" name="expand"></slot>
+      <slot v-if="(active || !edit || tree) && !mutating" name="expand"></slot>
     </div>
   </li>
 </template>
@@ -30,6 +30,7 @@
         contentObserver: null,
         transitionOff: true,
         edit: false,
+        mutating: false,
         tree: false
       }
     },
@@ -94,8 +95,11 @@
       let grandPa = this.$parent.$parent
       if (grandPa.$el.classList.value.indexOf('md-list-form') !== -1) {
         this.edit = grandPa.$props.edit
-        this.$watch('$parent.$parent.$props.edit', function (newVal, oldVal) {
-          this.edit = grandPa.$props.edit
+        this.$watch('$parent.$parent.$props.edit', function (newVal) {
+          this.edit = newVal
+        })
+        this.$watch('$parent.$parent.$props.mutating', function (newVal) {
+          this.mutating = newVal
         })
       } else {
         this.edit = true

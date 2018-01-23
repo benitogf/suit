@@ -7,6 +7,10 @@
 
 > A Vue.js project based on [vue-material](http://vuematerial.io) please check the [wiki](https://github.com/benitogf/suit/wiki) for more details about the project goals
 
+## Live demo
+
+https://suit.minut.us
+
 ## Development Requirements
 
 The [api](https://github.com/benitogf/tie) running locally, or changing [the dev config](https://github.com/benitogf/suit/blob/master/config/index.js#L47) to https://api.minut.us

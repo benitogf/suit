@@ -1,21 +1,25 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import md5 from 'md5'
-import router from '@/router'
 import * as types from '../mutation-types'
 
 Vue.use(VueResource)
 
 // initial state
 const state = {
-  user: null,
+  user: {
+    account: null,
+    id: null,
+    role: null,
+    token: null
+  },
   profile: null,
   error: ''
 }
 
 // getters
 const getters = {
-  currentUser: state => state.user,
+  currentUser: state => state.user.account,
   profile: state => state.profile,
   loginError: state => state.error
 }
@@ -23,16 +27,16 @@ const getters = {
 // actions
 const actions = {
   login ({ commit }, user) {
-    let credentials = Object.assign({}, user)
-    credentials.password = md5(credentials.password)
-    Vue.http.post('/api/authorize', credentials)
+    user.password = md5(user.password)
+    Vue.http.post('/api/authorize', user)
       .then(response => {
-        credentials.token = response.data.token
-        credentials.id = response.data.id
-        credentials.role = response.data.role
-        commit(types.LOGIN, { credentials })
+        user.token = response.data.token
+        user.id = response.data.id
+        user.role = response.data.role
+        commit(types.LOGIN, { user })
       })
       .catch(error => {
+        console.log(error)
         commit(types.LOGIN_ERROR, { error: error.data.message })
       })
   },
@@ -48,18 +52,20 @@ const actions = {
     let data = response.body
     commit(types.SET_PROFILE, { data })
   },
-  logout ({ commit }) {
-    commit(types.LOGOUT)
-    router.push({ name: 'home' })
+  logout ({ commit, state }) {
+    return new Promise((resolve) => {
+      commit(types.LOGOUT)
+      resolve(state.user)
+    })
   }
 }
 
 // mutations
 const mutations = {
-  [types.LOGIN] (state, { credentials }) {
-    state.user = credentials
+  [types.LOGIN] (state, { user }) {
+    delete user.password
+    state.user = user
     state.error = ''
-    Vue.nextTick(() => router.push({ name: 'home' }))
   },
   [types.SET_PROFILE] (state, { data }) {
     state.profile = data
@@ -71,10 +77,10 @@ const mutations = {
     state.user.token = token
   },
   [types.LOGOUT] (state) {
-    state.user = null
-    state.profile = null
-    console.log(state)
-    router.push({ name: 'home' })
+    state.user.account = null
+    state.user.id = null
+    state.user.role = null
+    state.user.token = null
   }
 }
 

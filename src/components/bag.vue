@@ -6,11 +6,16 @@
       <md-card-actions>
         <md-layout md-column>
           <md-layout md-row md-align="end">
-            <md-button md-flex class="md-default md-raised keep"
-              @click="keepShopping()">keep shopping</md-button>
+            <md-button md-flex class="md-default md-raised keep" @click="keepShopping()">
+              <i class="material-icons">navigate_before</i>
+              <i class="material-icons">store</i>
+            </md-button>
             <md-button class="md-accent md-raised"
               :disabled="!products.length"
-              @click.native="checkout(products)">Checkout</md-button>
+              @click.native="checkout(products)">
+              <i class="material-icons">transfer_within_a_station</i>
+              <i class="material-icons">local_atm</i>
+            </md-button>
           </md-layout>
           <md-layout md-row class="total-container">
             <div class="md-title total-title">Total</div>
@@ -24,7 +29,7 @@
       </md-card-header>
 
       <md-card-content>
-        <p v-show="!products.length"><i>Please consider adding some products to your bag</i></p>
+        <p v-show="!products.length" class="empty-bag">Please consider adding some products to your bag</p>
         <md-list v-if="products.length > 0" class="md-theme-primary">
           <md-list-item v-for="(product, index) in products" :key="index">
             <bag-product @open="open()" :product="product"></bag-product>
@@ -124,5 +129,11 @@ export default {
     right: 93px;
     left: 16px;
   }
+}
+.empty-bag {
+  padding: 25px;
+}
+.material-icons {
+  vertical-align: middle;
 }
 </style>

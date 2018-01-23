@@ -15,10 +15,17 @@ var port = 9009
 var app = express()
 
 // serve pure static assets
-var staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory)
-app.use(express.static(config.build.assetsRoot))
+// var staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory)
 
-app.use('*',  function (req, res) {
+app.use(express.static(config.build.assetsRoot))
+// app.use(express.static('/service.worker.js'))
+
+// app.use('/nope',  function (req, res) {
+//   console.log(req)
+//     res.send('nope')
+// })
+
+app.use(/^((?!\/service\.worker\.js).)*$/,  function (req, res) {
     res.sendFile(config.build.index)
 })
 
