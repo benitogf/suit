@@ -12,7 +12,7 @@ import wh from '@/lib/session'
 
 Vue.use(Vuex)
 
-const filteredMutations = ['CLEAR_BAG', 'SELECT_PRODUCT', 'SELECT_PAGE']
+const filteredMutations = ['CLEAR_BAG', 'SELECT_PRODUCT', 'SELECT_PAGE', 'route/ROUTE_CHANGED']
 
 const persistEmitter = () => {
   return store => {
@@ -39,7 +39,7 @@ const persist = new VuexPersist({
 
       return {}
     },
-    setItem: async (key, value) => {
+    setItem: async (key, value, that) => {
       await wh.hub.upsert('public', 'public')
       // console.log('state:set', value)
       return await wh.state.set(key + ':state', value)

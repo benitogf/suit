@@ -1,51 +1,43 @@
 <template>
 
-  <md-layout md-row md-column-small class="content page">
+  <md-layout md-column class="content page">
 
-    <md-card>
+    <md-dialog-confirm
+      v-if="isAdmin"
+      :md-title="confirm.title"
+      :md-content-html="confirm.contentHtml"
+      :md-ok-text="confirm.ok"
+      md-cancel-text="cancel"
+      @close="onCloseConfirm"
+      ref="removeConfirm">
+    </md-dialog-confirm>
 
-      <md-dialog-prompt
-        v-if="isAdmin"
-        :md-theme="prompt.theme"
-        :md-title="prompt.title"
-        :md-ok-text="prompt.ok"
-        :md-cancel-text="prompt.cancel"
-        @close="onCloseDialog"
-        v-model="prompt.value"
-        ref="page">
-      </md-dialog-prompt>
+    <md-dialog-prompt
+      v-if="isAdmin"
+      :md-theme="prompt.theme"
+      :md-title="prompt.title"
+      :md-ok-text="prompt.ok"
+      :md-cancel-text="prompt.cancel"
+      @close="onCloseDialog"
+      v-model="prompt.value"
+      ref="page">
+    </md-dialog-prompt>
 
-      <md-card-area md-inset>
-        <md-card-header>
-          <h2 class="md-title">{{id}}</h2>
-          <div class="md-subhead">
-            <span></span>
-          </div>
-        </md-card-header>
-      </md-card-area>
+    <md-whiteframe v-if="isAdmin" md-elevation="0" class="page-admin">
+      <md-layout md-align="end">
+        <md-button v-if="edit" @click="openDialogSub({})" class="md-button md-primary">add content</md-button>
+        <md-switch v-model="edit"></md-switch>
+      </md-layout>
+    </md-whiteframe>
 
-      <md-card-content v-if="page">
-        <md-layout md-align="end">
-          <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialogSub({ })">
-            add content
-          </md-button>
-          <md-list v-if="isAdmin">
-            <md-list-item>
-              <span></span>
-              <md-switch v-model="edit"></md-switch>
-            </md-list-item>
-          </md-list>
-        </md-layout>
-        <md-list-form :edit="edit && isAdmin"
-          :mutating="mutating"
-          :level="0"
-          @sub="openDialogSub"
-          @plus="plus"
-          @fire="fire">
-        </md-list-form>
-      </md-card-content>
-
-    </md-card>
+    <md-list-form v-if="!newContent" :edit="edit && isAdmin"
+      :mutating="mutating"
+      :level="0"
+      @sub="openDialogSub"
+      @del="openConfirm"
+      @plus="plus"
+      @fire="fire">
+    </md-list-form>
 
   </md-layout>
 
@@ -67,6 +59,13 @@ export default {
   data: () => ({
     edit: true,
     mutating: false,
+    newContent: false,
+    removing: null,
+    confirm: {
+      title: 'confirm',
+      contentHtml: 'confirm',
+      ok: 'ok'
+    },
     prompt: {
       title: 'Create tag',
       ok: 'Done',
@@ -81,9 +80,12 @@ export default {
   }),
   methods: {
     ...mapActions([
+      'getPage',
       'setPage',
       'subPage',
-      'plusPage'
+      'plusPage',
+      'delSubPage',
+      'delPageContent'
     ]),
     fire () {
       this.setPage({ tag: this.id, page: this.page })
@@ -97,39 +99,80 @@ export default {
       this.$refs.page.open()
       this.ref = ref.id || 'root'
     },
+    openConfirm (ref) {
+      this.removing = ref
+      this.confirm = {
+        subject: 'extra',
+        title: 'Removal confirmation',
+        ok: 'OK remove the content'
+      }
+
+      if (!ref.sub) {
+        this.confirm.contentHtml = 'Please confirm that you wish to remove the content of <b>' + ref.id + '</b> and all sub sections attached to it'
+      } else {
+        this.confirm.contentHtml = 'Please confirm that you wish to remove the last block content of <b>' + ref.id + '</b>'
+      }
+      this.$refs.removeConfirm.open()
+    },
     plus (data) {
-      this.mutating = true
+      this.edit = false
       this.plusPage({ tag: this.id, root: data.root, id: data.id })
       this.$nextTick(() => {
-        this.mutating = false
+        this.edit = true
       })
     },
     onCloseDialog (ref) {
       if (this.prompt.value && ref === 'ok') {
-        this.mutating = true
+        this.newContent = this.ref === 'root' && !this.page[this.ref].data
         this.subPage({ tag: this.id, sub: this.prompt.value, parent: this.ref })
-        this.$nextTick(() => {
-          this.mutating = false
-        })
+        if (this.newContent) {
+          this.$nextTick(() => {
+            this.newContent = false
+          })
+        } else {
+          this.mutating = true
+          this.$nextTick(() => {
+            this.mutating = false
+          })
+        }
+      }
+    },
+    onCloseConfirm (response) {
+      if (response === 'ok') {
+        if (!this.removing.sub) {
+          this.mutating = true
+          this.delPageContent({ tag: this.id, root: this.removing.root, id: this.removing.id })
+          this.$nextTick(() => {
+            this.mutating = false
+          })
+        } else {
+          this.edit = false
+          this.delSubPage({ tag: this.id, root: this.removing.root, id: this.removing.id })
+          this.$nextTick(() => {
+            this.edit = true
+          })
+        }
       }
     }
   },
-  mounted () {
-  }
+  mounted () {}
 }
 </script>
 <style lang="scss" scoped>
-.md-card {
-  flex-grow: 1;
-  & > .md-card-area .md-card-header {
-    padding-bottom: 0;
-    padding-top: 0;
-  }
-  & > .md-card-content:last-child {
-    padding-top: 0;
-  }
-  & > .md-button {
-    margin: 0;
-  }
+.page-title {
+  padding: 10px 16px;
+  margin: 15px 0 5px;
+}
+.title-underline {
+  margin: 0 15px;
+}
+.page-admin {
+  padding-right: 30px;
+  padding-top: 8px;
+  position: absolute;
+  right: 0;
+  z-index: 6;
+  background: #fff;
+  left: 0;
 }
 </style>

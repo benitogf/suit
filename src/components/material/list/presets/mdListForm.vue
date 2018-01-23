@@ -1,6 +1,9 @@
 <template>
 
-  <md-list class="md-dense md-list-form">
+  <md-list class="md-dense md-list-form" :class="{
+      'origin': root === 'root',
+      'form-admin': isAdmin
+    }">
 
     <md-list-item v-for="(section, index) in page[root]" :key="index" :class="'level'+level">
 
@@ -8,22 +11,22 @@
 
       <md-list-expand :md-expand-multiple="true" :edit="edit && isAdmin" :mutating="mutating" v-if="page[section.id] instanceof Array">
 
-        <md-toolbar v-if="edit && isAdmin" class="md-dense">
+        <md-toolbar v-if="edit && isAdmin" class="md-dense page-edit-tools">
           <md-button class="md-primary md-raised" @click="action({ action: 'plus', root,  id: section.id })">
             <i class="material-icons">add_box</i>
           </md-button>
 
-          <md-button class="md-raised" v-if="root === 'root'" @click="action({ action: 'sub', id: section.id })">
+          <md-button class="md-primary md-raised" v-if="root === 'root'" @click="action({ action: 'sub', id: section.id })">
             <i class="material-icons">add_box</i>
             <i class="material-icons">subdirectory_arrow_right</i>
           </md-button>
 
-          <md-layout md-align="end">
-            <md-button class="md-accent md-raised" :disabled="section.data.length === 1" @click="action({ action: 'del', root,  id: section.id })">
+          <md-layout md-align="end" class="delete-row">
+            <md-button class="md-accent md-raised" :disabled="section.data.length === 1" @click="action({ action: 'del', root,  id: section.id, sub: true })">
               <i class="material-icons">remove_circle</i>
             </md-button>
 
-            <md-button class="md-warn md-raised" @click="action({ action: 'sub', id: section.id })">
+            <md-button class="md-warn md-raised" @click="action({ action: 'del', root, id: section.id })">
               <i class="material-icons">clear</i></md-icon>
             </md-button>
           </md-layout>
@@ -38,6 +41,7 @@
           :level="level+1"
           @sub="action"
           @plus="action"
+          @del="action"
           @fire="fire"
           :root="section.id">
         </md-list-form>

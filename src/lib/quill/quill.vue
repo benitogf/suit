@@ -153,6 +153,7 @@ export default {
       .ql-editor {
         padding: 0;
         margin-bottom: 20px;
+        overflow-y: hidden;
       }
     }
     &:not(.ql-disabled) .ql-editor {

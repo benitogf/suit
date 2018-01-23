@@ -1,11 +1,19 @@
 <template>
   <div class="container">
-    <md-layout md-flex="100" md-align="center" v-if="loading">
+    <md-layout md-flex="100" v-if="loading">
       <md-progress md-indeterminate></md-progress>
     </md-layout>
     <div v-if="!loading" class="container">
-      <md-dialog-prompt v-if="user"
-        :md-theme="prompt.theme"
+
+      <md-dialog-confirm :md-title="confirm.title"
+        :md-content-html="confirm.contentHtml"
+        :md-ok-text="confirm.ok"
+        md-cancel-text="cancel"
+        @close="onCloseConfirm"
+        ref="removeConfirm">
+      </md-dialog-confirm>
+
+      <md-dialog-prompt :md-theme="prompt.theme"
         :md-title="prompt.title"
         :md-ok-text="prompt.ok"
         :md-cancel-text="prompt.cancel"
@@ -18,7 +26,8 @@
         <md-button class="md-icon-button nav-trigger" @click="toggleSidenav">
           <md-icon md-src="menu">menu</md-icon>
         </md-button>
-        <md-layout md-align="end">
+        <h2 class="md-title page-title">{{ title }}</h2>
+        <md-layout v-if="state !== 'settings'" md-align="end">
           <md-button class="md-icon-button" @click.native="toggleRightSidenav">
               <i class="material-icons">local_mall</i>
           </md-button>
@@ -32,7 +41,7 @@
           </router-link>
         </md-toolbar>
 
-        <md-list v-if="isAdmin">
+        <md-list v-if="isAdmin && state !== 'settings'">
           <md-list-item>
             <md-layout md-align="end">
             <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialog(false)">
@@ -48,7 +57,7 @@
           </md-list-item>
         </md-list>
 
-        <md-list-tree v-if="tags" :edit="edit && isAdmin" :tags="tags" @add="openDialog"></md-list-tree>
+        <md-list-tree v-if="tags" :edit="edit && isAdmin && state !== 'settings'" :tags="tags" @add="openDialog" @del="openConfirm"></md-list-tree>
 
         <md-list v-if="availableRoutes" class="sidenav-static-links">
           <md-list-item v-for="r in availableRoutes" :key="r.name">
@@ -56,11 +65,21 @@
               {{r.name}}
             </router-link>
           </md-list-item>
+          <md-list-item v-if="user">
+            <router-link exact to="/settings">
+              settings
+            </router-link>
+          </md-list-item>
+          <md-list-item v-if="!user">
+            <router-link exact to="/login">
+              login
+            </router-link>
+          </md-list-item>
         </md-list>
 
       </md-sidenav>
 
-      <md-sidenav v-if="state !== 'login'" class="md-right" ref="rightSidenav">
+      <md-sidenav v-if="state !== 'login' && state !== 'settings'" class="md-right" ref="rightSidenav">
 
         <md-toolbar class="md-right-close">
           <div class="md-title">
@@ -100,12 +119,30 @@ export default {
       state: 'currentState',
       tags: 'tags',
       availableRoutes: 'availableRoutes',
-      isAdmin: 'isAdmin'
-    })
+      isAdmin: 'isAdmin',
+      product: 'product'
+    }),
+    title: function () {
+      if (this.state === 'page') {
+        return this.$route.params.id
+      } else {
+        if (this.state === 'product') {
+          return this.product ? this.product.name : ''
+        } else {
+          return this.state
+        }
+      }
+    }
   },
   data: () => ({
     edit: false,
     loading: true,
+    removing: null,
+    confirm: {
+      title: 'confirm',
+      contentHtml: 'confirm',
+      ok: 'ok'
+    },
     prompt: {
       title: 'Create tag',
       ok: 'Done',
@@ -120,16 +157,17 @@ export default {
   }),
   methods: {
     ...mapActions([
-      'setTags'
+      'setTags',
+      'delTag'
     ]),
     openDialog (ref) {
       this.prompt.title = 'Create tag'
       if (ref) {
-        this.prompt.title += ' in ' + ref
+        this.prompt.title += ' in ' + ref.id
       }
       this.prompt.value = ''
       this.$refs.tag.open()
-      this.ref = ref || 'root'
+      this.ref = ref.id || 'root'
     },
     closeDialog (ref) {
       this.$refs.tag.close()
@@ -142,6 +180,32 @@ export default {
         }
         tags[this.ref].push(this.prompt.value)
         this.setTags(tags)
+      }
+    },
+    openConfirm (ref) {
+      this.removing = ref
+      this.confirm = {
+        subject: 'extra',
+        title: 'Removal confirmation',
+        ok: 'OK remove the tag'
+      }
+
+      this.confirm.contentHtml = 'Please confirm that you wish to remove the tag of <b>' + ref.id + '</b> and all sub tags attached to it'
+      this.$refs.removeConfirm.open()
+    },
+    onCloseConfirm (response) {
+      if (response === 'ok') {
+        this.edit = false
+        this.delTag({ id: this.removing.id, root: this.removing.root })
+        if (this.$route.name === 'page' && this.$route.params.id === this.removing.id) {
+          this.$nextTick(() => {
+            router.push({ name: 'shop' })
+          })
+        } else {
+          this.$nextTick(() => {
+            this.edit = true
+          })
+        }
       }
     },
     toggleSidenav () {
@@ -172,7 +236,6 @@ export default {
   mounted () {
     const self = this
     self.$store._vm.$root.$on('storageReady', () => {
-      // console.log(JSON.stringify(self.tags))
       this.$store.dispatch('getTags')
       self.loading = false
       router.beforeEach((to, from, next) => {
@@ -186,29 +249,6 @@ export default {
 
 <style lang="scss">
   @import 'src/components/material/core/stylesheets/variables.scss';
-  /* fallback */
-  @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url('/static/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2') format('woff2');
-  }
-
-  .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-  }
 
   [v-cloak] {
     display: none;
@@ -266,10 +306,16 @@ export default {
 
   .content {
       overflow-y: auto;
-      @media (min-width: $breakpoint-large +1) {
-        margin-left: $sidenav-width;
-      }
       min-width: unset !important;
+  }
+
+  @media (min-width: $breakpoint-large +1) {
+    .page-title {
+      margin-left: $sidenav-width - 65px !important;
+    }
+    .content {
+      margin-left: $sidenav-width;
+    }
   }
 
   /* Enter and leave animations can use different */
@@ -295,7 +341,7 @@ export default {
 
   .sidenav-static-links {
     padding: 0 !important;
-    .md-button {
+    a.md-button {
       margin: 0;
     }
   }

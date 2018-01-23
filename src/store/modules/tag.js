@@ -17,6 +17,10 @@ const state = {
 
 // actions
 const actions = {
+  delTag ({ commit }, { id, root }) {
+    commit(types.DEL_TAG, { id, root })
+    commit(types.DEL_PAGE, { tag: id })
+  },
   getTags ({ commit }) {
     if (!state.tags) {
       api.getTags(tags => {
@@ -31,6 +35,14 @@ const actions = {
 
 // mutations
 const mutations = {
+  [types.DEL_TAG] (state, { id, root }) {
+    let index = state.tags[root].indexOf(id)
+    state.tags[root].splice(index, 1)
+    if (state.tags[root].length === 0 && root !== 'root') {
+      delete state.tags[root]
+    }
+  },
+
   [types.SET_TAGS] (state, { tags }) {
     state.tags = tags
   }

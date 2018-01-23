@@ -2,6 +2,8 @@
 node_modules
 dist/*
 !dist/hub.js
+dist.zip
+hillary.yml
 npm-debug.log
 yarn-error.log
 test/unit/coverage

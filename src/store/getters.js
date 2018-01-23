@@ -1,11 +1,9 @@
 import router from '@/router'
 
-const excludedRoutes = ['page', 'product']
+const excludedRoutes = ['page', 'product', 'login', 'settings']
 
 export const availableRoutes = state => router.options.routes.reduce((cat, {name, path}) => {
-  if (excludedRoutes.indexOf(name) === -1 && path !== '*' &&
-    (name !== 'login' || state.user.user === null) &&
-    (name !== 'logout' || isAdmin(state))) {
+  if (excludedRoutes.indexOf(name) === -1 && path !== '*') {
     cat.push({name, path})
   }
   return cat
@@ -31,4 +29,4 @@ export const bagProducts = state => state.products.all ? state.products.all.redu
 
 export const currentState = state => state.route.name
 
-export const isAdmin = state => state && state.user.user && state.user.user.role === 'admin'
+export const isAdmin = state => state && state.user.user.token && state.user.user.role === 'admin'

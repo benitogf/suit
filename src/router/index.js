@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/components/login'
-import logout from '@/components/logout'
+import settings from '@/components/settings'
 import page from '@/components/page-view'
 import shop from '@/components/shop'
 import product from '@/components/product-view'
@@ -35,9 +35,9 @@ export default new Router({
       props: true
     },
     {
-      path: '/logout',
-      name: 'logout',
-      component: logout
+      path: '/settings',
+      name: 'settings',
+      component: settings
     },
     {
       path: '*',

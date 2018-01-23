@@ -8,7 +8,7 @@ const __soup = {
       id:'noodles',
       data:[{
         ops:[{
-          insert:'any kind should work\n'
+          insert:'  Any kind should work\n'
         }]
       }]
     },
@@ -17,7 +17,7 @@ const __soup = {
       id:'water',
       data:[{
         ops:[{
-          insert:'it needs to boil\n'
+          insert:'  It needs to boil\n'
         }]
       }]
     },
@@ -26,7 +26,7 @@ const __soup = {
       id:'vegetables',
       data:[{
         ops:[{
-          insert:'preferably fresh\n'
+          insert:'  Preferably fresh\n'
         }]
       }]
     },
@@ -35,7 +35,7 @@ const __soup = {
       id:'meat',
       data:[{
         ops:[{
-          insert:'raw with some salt for the flavor\n'
+          insert:'  Raw with some salt for the flavor\n'
         }]
       }]
     },
@@ -44,7 +44,7 @@ const __soup = {
       id:'fire',
       data:[{
         ops:[{
-          insert:'don\'t put this inside it, just around for a while\n'
+          insert:'  Don\'t put this inside it, just around for a while\n'
         }]
       }]
     }

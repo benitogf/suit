@@ -1,7 +1,5 @@
 <template>
-  <md-layout md-align="center">
-    <page v-if="page" :id="id" :page="page"></page>
-  </md-layout>
+  <page v-if="page && !loading" :id="id" :page="page"></page>
 </template>
 
 <script>
@@ -19,16 +17,26 @@ export default {
     })
   },
   data: () => ({
-    edit: true
+    edit: true,
+    loading: true
   }),
   watch: {
-    'id': function (newId) {
-      this.$store.dispatch('getPage', newId)
+    '$route.path': function (newId) {
+      // console.log('w', newId)
+      this.loading = true
+      this.$store.dispatch('getPage', newId.replace('/page/', ''))
+      this.$nextTick(() => {
+        this.loading = false
+      })
     }
   },
-  created () {
-    console.log(this.$route.params.id, this.id)
-    this.$store.dispatch('getPage', this.$route.params.id)
+  mounted () {
+    // route params don't propagate due to the store filter for the route mutation
+    // console.log('m', this.id)
+    this.$store.dispatch('getPage', this.$route.path.replace('/page/', ''))
+    this.$nextTick(() => {
+      this.loading = false
+    })
   }
 }
 </script>

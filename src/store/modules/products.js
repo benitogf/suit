@@ -43,6 +43,7 @@ const actions = {
         commit(types.SELECT_PRODUCT, { id })
       })
     } else {
+      console.log(id)
       commit(types.SELECT_PRODUCT, { id })
     }
   },

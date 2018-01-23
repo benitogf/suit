@@ -19,6 +19,12 @@ const getters = {
 
 // actions
 const actions = {
+  delPageContent ({ commit }, { tag, root, id }) {
+    commit(types.DEL_PAGE_CONTENT, { tag, root, id })
+  },
+  delSubPage ({ commit }, { tag, root, id }) {
+    commit(types.DEL_SUB_PAGE, { tag, root, id })
+  },
   plusPage ({ commit }, { tag, root, id }) {
     commit(types.PLUS_PAGE, { tag, root, id })
   },
@@ -27,6 +33,9 @@ const actions = {
   },
   setPage ({ commit }, { tag, page }) {
     commit(types.SET_PAGE, { tag, page })
+  },
+  delPage ({ commit }, { tag }) {
+    commit(types.DEL_PAGE, { tag })
   },
   getPage ({ commit, state }, tag) {
     if (!state.pages[tag]) {
@@ -42,6 +51,27 @@ const actions = {
 
 // mutations
 const mutations = {
+  [types.DEL_PAGE_CONTENT] (state, { tag, root, id }) {
+    let index = state.pages[tag][root].findIndex((page) => page.id === id)
+    state.pages[tag][id].forEach((sub) => {
+      delete state.pages[tag][sub.id]
+    })
+    delete state.pages[tag][id]
+    state.pages[tag][root].splice(index, 1)
+  },
+
+  [types.DEL_PAGE] (state, { tag }) {
+    delete state.pages[tag]
+    state.pages[tag] = { root: [] }
+    if (state.selected === tag) {
+      state.selected = null
+    }
+  },
+
+  [types.DEL_SUB_PAGE] (state, { tag, root, id }) {
+    state.pages[tag][root].find((page) => page.id === id).data.pop()
+  },
+
   [types.PLUS_PAGE] (state, { tag, root, id }) {
     state.pages[tag][root].find((page) => page.id === id).data.push({ops: [{ insert: '' }]})
   },

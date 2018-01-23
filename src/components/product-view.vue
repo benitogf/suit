@@ -33,7 +33,9 @@ export default {
     edit: true
   }),
   created () {
-    this.$store.dispatch('getProduct', parseInt(this.$route.params.id))
+    // route params don't propagate due to the store filter for the route mutation
+    // this.$store.dispatch('getProduct', parseInt(this.$route.params.id))
+    this.$store.dispatch('getProduct', parseInt(this.$route.path.replace('/product/', '')))
   }
 }
 </script>

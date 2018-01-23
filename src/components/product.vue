@@ -172,7 +172,7 @@
       </md-card-media>
 
       <md-card-content>
-        <p class="product-view">{{ product.description }}</p>
+        <p class="product-description">{{ product.description }}</p>
       </md-card-content>
     </md-card>
 
@@ -370,6 +370,7 @@ export default {
 .product-view {
   overflow-y: hidden;
   display: table;
+  min-width: 320px;
 }
 
 .product-margin {

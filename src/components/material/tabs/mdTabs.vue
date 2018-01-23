@@ -252,9 +252,11 @@
         })
       },
       checkNavigationScroll () {
-        const { scrollWidth, clientWidth } = this.$refs.tabsContainer
+        if (this.$refs.tabsContainer) {
+          const { scrollWidth, clientWidth } = this.$refs.tabsContainer
 
-        this.hasNavigationScroll = scrollWidth > clientWidth
+          this.hasNavigationScroll = scrollWidth > clientWidth
+        }
       },
       setActiveTab (tabData) {
         this.hasIcons = !!tabData.icon || !!tabData.iconset
