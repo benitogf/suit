@@ -1,6 +1,6 @@
 <template>
 
-  <md-layout md-column class="content page">
+  <md-layout md-column class="page">
 
     <md-dialog-confirm
       v-if="isAdmin"
@@ -30,7 +30,7 @@
       </md-layout>
     </md-whiteframe>
 
-    <md-list-form v-if="!newContent" :edit="edit && isAdmin"
+    <md-list-form v-if="!newContent && page && !loading" :edit="edit && isAdmin"
       :mutating="mutating"
       :level="0"
       @sub="openDialogSub"
@@ -48,15 +48,16 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Page',
   props: {
-    page: Object,
     id: String
   },
   computed: {
     ...mapGetters({
-      isAdmin: 'isAdmin'
+      isAdmin: 'isAdmin',
+      page: 'page'
     })
   },
   data: () => ({
+    loading: true,
     edit: true,
     mutating: false,
     newContent: false,
@@ -155,7 +156,17 @@ export default {
       }
     }
   },
-  mounted () {}
+  watch: {
+    'edit': function () {
+      this.$emit('edit', this.edit)
+    }
+  },
+  mounted () {
+    this.$store.dispatch('getPage', this.id)
+    this.$nextTick(() => {
+      this.loading = false
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -169,6 +180,7 @@ export default {
 .page-admin {
   padding-right: 30px;
   padding-top: 8px;
+  margin-bottom: 8px;
   position: absolute;
   right: 0;
   z-index: 6;

@@ -1,5 +1,5 @@
 <template>
-  <page v-if="page && !loading" :id="id" :page="page"></page>
+  <page class="content" v-if="id" :id="id"></page>
 </template>
 
 <script>
@@ -8,7 +8,6 @@ import Page from './page.vue'
 
 export default {
   name: 'PageView',
-  props: ['id'],
   components: { Page },
   computed: {
     ...mapGetters({
@@ -17,26 +16,17 @@ export default {
     })
   },
   data: () => ({
-    edit: true,
-    loading: true
+    id: null
   }),
   watch: {
     '$route.path': function (newId) {
-      // console.log('w', newId)
-      this.loading = true
-      this.$store.dispatch('getPage', newId.replace('/page/', ''))
-      this.$nextTick(() => {
-        this.loading = false
-      })
+      this.id = newId.replace('/page/', '')
     }
   },
   mounted () {
     // route params don't propagate due to the store filter for the route mutation
     // console.log('m', this.id)
-    this.$store.dispatch('getPage', this.$route.path.replace('/page/', ''))
-    this.$nextTick(() => {
-      this.loading = false
-    })
+    this.id = this.$route.path.replace('/page/', '')
   }
 }
 </script>

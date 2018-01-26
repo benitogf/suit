@@ -1,106 +1,105 @@
 <template>
   <div class="container">
+    <md-dialog-confirm :md-title="confirm.title"
+      :md-content-html="confirm.contentHtml"
+      :md-ok-text="confirm.ok"
+      md-cancel-text="cancel"
+      @close="onCloseConfirm"
+      ref="removeConfirm">
+    </md-dialog-confirm>
+
+    <md-dialog-prompt :md-theme="prompt.theme"
+      :md-title="prompt.title"
+      :md-ok-text="prompt.ok"
+      :md-cancel-text="prompt.cancel"
+      @close="onCloseDialog"
+      v-model="prompt.value"
+      ref="tag">
+    </md-dialog-prompt>
+
+    <md-whiteframe v-if="state !== 'login'" md-tag="md-toolbar" md-elevation="1" class="top-toolbar">
+      <md-button v-if="!loading" class="md-icon-button nav-trigger" @click="toggleSidenav">
+        <md-icon md-src="menu">menu</md-icon>
+      </md-button>
+      <h2 class="md-title" :class="{
+        'page-title': !loading
+      }">{{ title }}</h2>
+      <md-layout v-if="state !== 'settings' && !loading" md-align="end">
+        <md-button class="md-icon-button" @click.native="toggleRightSidenav">
+            <i class="material-icons">local_mall</i>
+        </md-button>
+      </md-layout>
+    </md-whiteframe>
     <md-layout md-flex="100" v-if="loading">
       <md-progress md-indeterminate></md-progress>
     </md-layout>
-    <div v-if="!loading" class="container">
 
-      <md-dialog-confirm :md-title="confirm.title"
-        :md-content-html="confirm.contentHtml"
-        :md-ok-text="confirm.ok"
-        md-cancel-text="cancel"
-        @close="onCloseConfirm"
-        ref="removeConfirm">
-      </md-dialog-confirm>
+    <md-sidenav v-if="state !== 'login'" class="nav-sidebar md-left md-fixed" md-swipeable ref="leftSidenav">
+      <md-toolbar class="logo">
+        <router-link exact to="/">
+          <md-icon md-src="corsarial"></md-icon>
+        </router-link>
+      </md-toolbar>
 
-      <md-dialog-prompt :md-theme="prompt.theme"
-        :md-title="prompt.title"
-        :md-ok-text="prompt.ok"
-        :md-cancel-text="prompt.cancel"
-        @close="onCloseDialog"
-        v-model="prompt.value"
-        ref="tag">
-      </md-dialog-prompt>
+      <md-list v-if="isAdmin && state !== 'settings'  && !loading">
+        <md-list-item>
+          <md-layout md-align="end">
+          <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialog(false)">
+            add tag
+          </md-button>
+          <md-list>
+            <md-list-item>
+              <span></span>
+              <md-switch v-model="edit"></md-switch>
+            </md-list-item>
+          </md-list>
+          </md-layout>
+        </md-list-item>
+      </md-list>
 
-      <md-whiteframe v-if="state !== 'login'" md-tag="md-toolbar" md-elevation="1" class="top-toolbar">
-        <md-button class="md-icon-button nav-trigger" @click="toggleSidenav">
-          <md-icon md-src="menu">menu</md-icon>
-        </md-button>
-        <h2 class="md-title page-title">{{ title }}</h2>
-        <md-layout v-if="state !== 'settings'" md-align="end">
-          <md-button class="md-icon-button" @click.native="toggleRightSidenav">
-              <i class="material-icons">local_mall</i>
+      <md-list-tree v-if="tags  && !loading" :edit="edit && isAdmin && state !== 'settings'" :tags="tags" @add="openDialog" @del="openConfirm"></md-list-tree>
+
+      <md-list v-if="availableRoutes  && !loading" class="sidenav-static-links">
+        <md-list-item v-for="r in availableRoutes" :key="r.name">
+          <router-link exact :to="r.path">
+            {{r.name}}
+          </router-link>
+        </md-list-item>
+        <md-list-item v-if="user">
+          <router-link exact to="/settings">
+            settings
+          </router-link>
+        </md-list-item>
+        <md-list-item v-if="!user">
+          <router-link exact to="/login">
+            login
+          </router-link>
+        </md-list-item>
+      </md-list>
+
+    </md-sidenav>
+
+    <md-sidenav v-if="state !== 'login' && state !== 'settings' && !loading" class="md-right" ref="rightSidenav">
+
+      <md-toolbar class="md-right-close">
+        <div class="md-title">
+          <i class="material-icons">local_mall</i>
+          <i class="material-icons">content_paste</i>
+        </div>
+        <md-layout md-align="end">
+          <md-button class="md-icon-button" @click.native="closeRightSidenav">
+            <md-icon md-src="close">close</md-icon>
           </md-button>
         </md-layout>
-      </md-whiteframe>
+      </md-toolbar>
 
-      <md-sidenav v-if="state !== 'login'" class="nav-sidebar md-left md-fixed" md-swipeable ref="leftSidenav">
-        <md-toolbar class="logo">
-          <router-link exact to="/">
-            <md-icon md-src="corsarial"></md-icon>
-          </router-link>
-        </md-toolbar>
+      <bag @close="close('right')" @open="open('right')"></bag>
 
-        <md-list v-if="isAdmin && state !== 'settings'">
-          <md-list-item>
-            <md-layout md-align="end">
-            <md-button class="md-primary" v-if="edit && isAdmin" @click.native="openDialog(false)">
-              add tag
-            </md-button>
-            <md-list>
-              <md-list-item>
-                <span></span>
-                <md-switch v-model="edit"></md-switch>
-              </md-list-item>
-            </md-list>
-            </md-layout>
-          </md-list-item>
-        </md-list>
+    </md-sidenav>
 
-        <md-list-tree v-if="tags" :edit="edit && isAdmin && state !== 'settings'" :tags="tags" @add="openDialog" @del="openConfirm"></md-list-tree>
-
-        <md-list v-if="availableRoutes" class="sidenav-static-links">
-          <md-list-item v-for="r in availableRoutes" :key="r.name">
-            <router-link exact :to="r.path">
-              {{r.name}}
-            </router-link>
-          </md-list-item>
-          <md-list-item v-if="user">
-            <router-link exact to="/settings">
-              settings
-            </router-link>
-          </md-list-item>
-          <md-list-item v-if="!user">
-            <router-link exact to="/login">
-              login
-            </router-link>
-          </md-list-item>
-        </md-list>
-
-      </md-sidenav>
-
-      <md-sidenav v-if="state !== 'login' && state !== 'settings'" class="md-right" ref="rightSidenav">
-
-        <md-toolbar class="md-right-close">
-          <div class="md-title">
-            <i class="material-icons">local_mall</i>
-            <i class="material-icons">content_paste</i>
-          </div>
-          <md-layout md-align="end">
-            <md-button class="md-icon-button" @click.native="closeRightSidenav">
-              <md-icon md-src="close">close</md-icon>
-            </md-button>
-          </md-layout>
-        </md-toolbar>
-
-        <bag @close="close('right')" @open="open('right')"></bag>
-
-      </md-sidenav>
-
-      <transition appear name="slide-fade">
-        <router-view></router-view>
-      </transition>
-    </div>
+    <transition v-if="!loading" appear name="slide-fade">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -124,10 +123,10 @@ export default {
     }),
     title: function () {
       if (this.state === 'page') {
-        return this.$route.params.id
+        return this.$route.path.replace('/page/', '')
       } else {
         if (this.state === 'product') {
-          return this.product ? this.product.name : ''
+          return this.loading || !this.product ? '' : this.product.name
         } else {
           return this.state
         }
@@ -239,8 +238,10 @@ export default {
       this.$store.dispatch('getTags')
       self.loading = false
       router.beforeEach((to, from, next) => {
+        self.loading = true
         self.closeSidenav()
         next()
+        setTimeout(() => { self.loading = false }, 900)
       })
     })
   }

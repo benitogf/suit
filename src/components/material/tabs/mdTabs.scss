@@ -44,7 +44,7 @@ $tab-max-width: 264px;
 
       .md-tabs-navigation-container {
         @include layout-small-and-up {
-          margin-bottom: -15px;
+          overflow: hidden;
         }
       }
     }

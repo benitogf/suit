@@ -69,11 +69,13 @@ const mutations = {
   },
 
   [types.DEL_SUB_PAGE] (state, { tag, root, id }) {
-    state.pages[tag][root].find((page) => page.id === id).data.pop()
+    let index = state.pages[tag][root].findIndex((page) => page.id === id)
+    state.pages[tag][root][index].data.pop()
   },
 
   [types.PLUS_PAGE] (state, { tag, root, id }) {
-    state.pages[tag][root].find((page) => page.id === id).data.push({ops: [{ insert: '' }]})
+    let index = state.pages[tag][root].findIndex((page) => page.id === id)
+    state.pages[tag][root][index].data.push({ops: [{ insert: '' }]})
   },
 
   [types.SUB_PAGE] (state, { tag, sub, parent }) {
