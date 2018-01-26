@@ -31,7 +31,7 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <md-dialog ref="productForm" v-if="edit && isAdmin">
+    <md-dialog ref="productForm" v-if="edit && isAdmin" @close="onCloseProductForm">
       <md-dialog-title>{{ product.name }}</md-dialog-title>
       <md-dialog-content>
         <form>
@@ -40,16 +40,13 @@
             <picture-input
               ref="pictureInput"
               @loaded="productPicture"
-              width="600"
-              height="600"
+              width="400"
+              height="400"
               margin="0"
               accept="image/jpeg,image/png,image/gif"
               size="10"
-              buttonClass="md-button md-default"
-              :customStrings="{
-                upload: '<h1>Bummer!</h1>',
-                drag: 'Drop or select 📷'
-              }">
+              :prefill="product.picture"
+              buttonClass="md-button md-default">
             </picture-input>
           </md-input-container>
           <md-input-container>
@@ -58,12 +55,21 @@
           </md-input-container>
           <md-input-container>
             <label>Price</label>
+            <md-input readonly v-model="product.price"></md-input>
+          </md-input-container>
+          <md-input-container>
+            <label>Base Price</label>
             <md-input v-model="product.basePrice"></md-input>
+          </md-input-container>
+          <md-input-container>
+            <label>inventory</label>
+            <md-input v-model="product.inventory"></md-input>
           </md-input-container>
           <md-input-container>
             <label>Description</label>
             <md-textarea v-model="product.description" maxlength="70"></md-textarea>
           </md-input-container>
+          <!-- <page v-if="product.page && showActions" :id="product.id.toString()" :page="product.page"></page> -->
           <div class="md-title vars-title">Extras</div>
           <md-layout md-flex v-for="label in extras" :key="label" class="extra">
             <md-list>
@@ -93,13 +99,13 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <md-dialog ref="extraForm" v-if="edit && isAdmin">
+    <md-dialog ref="extraForm" v-if="edit && isAdmin" @close="onCloseExtraForm">
       <md-dialog-title>{{ product.name + ' extra: ' + extraConfig.label }}</md-dialog-title>
       <md-dialog-content>
         <form v-if="extraConfig.label === 'variant'">
           <md-input-container>
             <label>Label</label>
-            <md-input v-model="extra.label"></md-input>
+            <md-input :readonly="extraConfig.action === 'edit'" v-model="extra.label"></md-input>
           </md-input-container>
           <md-input-container>
             <label>Price</label>
@@ -109,7 +115,7 @@
         <form v-if="extraConfig.label === 'bulk'">
           <md-input-container>
             <label>Label</label>
-            <md-input v-model="extra.label"></md-input>
+            <md-input :readonly="extraConfig.action === 'edit'" v-model="extra.label"></md-input>
           </md-input-container>
           <md-input-container>
             <label>Quantity</label>
@@ -122,9 +128,7 @@
         </form>
       </md-dialog-content>
       <md-dialog-actions>
-        <md-button class="md-default" @click="closeExtraForm()">Cancel</md-button>
-        <md-button v-if="extraConfig.action === 'add'" class="md-primary" @click="closeExtraForm()">add extra</md-button>
-        <md-button v-if="extraConfig.action === 'edit'" class="md-primary" @click="closeExtraForm()">save</md-button>
+        <md-button class="md-primary" @click="closeExtraForm()">done</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -146,7 +150,7 @@
           <div class="md-subhead product-price">{{ product.price | currency }}</div>
         </md-layout>
         <md-button v-if="!edit || !isAdmin" class="md-button md-raised md-primary"
-          :disabled="!product.inventory"
+          :disabled="notAvailable"
           @click="bagForm()">
           <i class="material-icons">local_mall</i>
           <i class="material-icons">exposure_plus_1</i>
@@ -171,8 +175,11 @@
         </router-link>
       </md-card-media>
 
-      <md-card-content>
+      <md-card-content :class="{
+        'product-content': !showActions && isAdmin
+        }">
         <p class="product-description">{{ product.description }}</p>
+        <page @edit="editToggle" v-if="!showActions && product" :id="product.id.toString()"></page>
       </md-card-content>
     </md-card>
 
@@ -180,7 +187,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import router from '@/router'
+import Page from '@/components/page'
 
 function calculatePrice () {
   const price = this.product.variants ? this.product.variants.reduce((cat, {label, price}) => {
@@ -188,25 +195,27 @@ function calculatePrice () {
       cat = price
     }
     return cat
-  }, '') : this.product.basePrice
+  }, 1) : this.product.basePrice
   const bulk = this.product.bulks ? this.product.bulks.reduce((cat, {label, factor}) => {
     if (label === this.product.bulk) {
       cat = factor
     }
     return cat
-  }, '') : 1
+  }, 1) : 1
   const quantity = this.product.bulks ? this.product.bulks.reduce((cat, {label, quantity}) => {
     if (label === this.product.bulk) {
       cat = quantity
     }
     return cat
-  }, '') : 1
+  }, 1) : 1
+  // console.log('calc', this.product.name, price, bulk, quantity)
   this.product.price = price * bulk
   this.product.quantity = quantity
 }
 
 export default {
   name: 'Product',
+  components: { Page },
   props: {
     product: Object,
     showActions: Boolean,
@@ -227,26 +236,37 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      user: 'currentUser',
       state: 'currentState',
       profile: 'profile',
       isAdmin: 'isAdmin'
-    })
+    }),
+    notAvailable () {
+      return this.product.inventory !== -1 && (this.product.inventory === 0 || this.product.quantity > this.product.inventory)
+    }
   },
   watch: {
     'product.variant': calculatePrice,
+    'product.variants': calculatePrice,
     'product.bulk': calculatePrice,
+    'product.bulks': calculatePrice,
     'product.basePrice': calculatePrice
   },
   methods: {
     ...mapActions([
-      'addToBag'
+      'addToBag',
+      'addExtra',
+      'alterExtra',
+      'alterProduct'
     ]),
+    calculatePrice,
     productForm () {
       this.$refs.productForm.open()
     },
     closeProductForm () {
       this.$refs.productForm.close()
+    },
+    onCloseProductForm () {
+      this.alterProduct(this.product)
     },
     productPicture (e) {
       this.product.picture = e
@@ -268,12 +288,25 @@ export default {
       if (!extra) {
         this.extra = {}
       } else {
-        this.extra = extra
+        this.extra = { ...extra }
       }
       this.$refs.extraForm.open()
     },
     closeExtraForm () {
       this.$refs.extraForm.close()
+    },
+    onCloseExtraForm () {
+      if (this.extraConfig.action === 'add' && this.extra.label) {
+        if (this.product[this.extraConfig.label + 's'] && this.product[this.extraConfig.label + 's'].find(ex => ex.label === this.extra.label)) {
+          console.log('This extra is already defined, please change the label to add it')
+          return
+        }
+        this.addExtra({ id: this.product.id, label: this.extraConfig.label, extra: this.extra })
+      }
+      if (this.extraConfig.action === 'edit') {
+        this.alterExtra({ id: this.product.id, label: this.extraConfig.label, extra: this.extra })
+      }
+      this.$nextTick(() => this.calculatePrice())
     },
     removeExtra (label, extra) {
       this.extraConfig = {
@@ -302,12 +335,15 @@ export default {
         this.remove()
       }
     },
+    editToggle (e) {
+      this.$emit('edit', e)
+    },
     remove () {
       switch (this.confirm.subject) {
         case 'product':
           this.$store.dispatch('removeProduct', this.product.id)
           if (this.state !== 'shop') {
-            router.push({ name: 'shop' })
+            this.$router.push({ name: 'shop' })
           }
           break
         case 'extra':
@@ -322,8 +358,7 @@ export default {
     }
   },
   mounted () {
-    const init = calculatePrice.bind(this)
-    init()
+    this.calculatePrice()
   }
 }
 </script>
@@ -369,8 +404,9 @@ export default {
 
 .product-view {
   overflow-y: hidden;
-  display: table;
   min-width: 320px;
+  margin-bottom: 30px;
+  margin-top: 69px;
 }
 
 .product-margin {
@@ -384,5 +420,14 @@ export default {
 
 .material-icons {
   vertical-align: middle;
+}
+
+.product-description {
+  margin: 25px;
+}
+
+.product-content {
+  min-height: 138px;
+  padding: 0;
 }
 </style>

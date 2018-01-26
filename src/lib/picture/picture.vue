@@ -21,8 +21,10 @@
         <div v-if="!imageSelected && !plain"
           class="picture-inner"
             :style="{top: -previewHeight + 'px', marginBottom: -previewHeight + 'px', fontSize: fontSize, borderRadius: radius + '%', zIndex: zIndex + 2}">
-          <span v-if="supportsDragAndDrop" class="picture-inner-text" v-html="strings.drag"></span>
-          <span v-else class="picture-inner-text" v-html="strings.tap"></span>
+          <span class="picture-inner-text">
+            <i class="material-icons product-picture">wallpaper</i>
+          </span>
+          <!-- <span v-else class="picture-inner-text" v-html="strings.tap"></span> -->
         </div>
       </div>
       <button v-if="imageSelected && !hideChangeButton" @click.prevent="selectImage" :class="buttonClass">{{ strings.change }} <i class="material-icons">attach_file</i></button>
@@ -397,7 +399,10 @@ export default {
       }
       this.containerWidth = newWidth
       this.previewWidth = Math.min(this.containerWidth - this.margin * 2, this.canvasWidth)
-      this.previewHeight = this.previewWidth / previewRatio
+      this.previewHeight = Math.min(this.previewWidth / previewRatio, 400)
+      // if (this.previewWidth / previewRatio > 400) {
+      //   this.canvasWidth = 400
+      // }
     },
     getOrientation (width, height) {
       let orientation = 'square'
@@ -475,6 +480,27 @@ export default {
         }
         return
       }
+      if (typeof source === 'string') {
+        if (source.indexOf('data:image') === 0) {
+          this.image = source
+          this.imageSelected = true
+          this.$emit('prefill')
+          this.imageObject = new Image()
+          this.imageObject.onload = () => {
+            if (this.autoToggleAspectRatio) {
+              let canvasOrientation = this.getOrientation(this.canvasWidth, this.canvasHeight)
+              let imageOrientation = this.getOrientation(this.imageObject.width, this.imageObject.height)
+              if (canvasOrientation !== imageOrientation) {
+                this.rotateCanvas()
+              }
+            }
+            this.drawImage(this.imageObject)
+          }
+          this.$emit('loaded', this.image)
+          this.imageObject.src = this.image
+        }
+        return
+      }
       let headers = new Headers()
       headers.append('Accept', 'image/*')
       fetch(source, {
@@ -520,13 +546,13 @@ export default {
       return classObject
     },
     fontSize () {
-      return Math.min(0.04 * this.previewWidth, 21) + 'px'
+      return Math.min(0.04 * this.previewWidth, 14) + 'px'
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .picture-input {
   width: 100%;
   margin: 0 auto;
@@ -569,6 +595,10 @@ export default {
   text-align: center;
   font-size: 2em;
   line-height: 1.5;
+  & .material-icons {
+    font-size: 5em !important;
+    color: #ccc !important;
+  }
 }
 button {
   margin: 1em .25em;

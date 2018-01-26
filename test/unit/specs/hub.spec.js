@@ -2,13 +2,12 @@
 import wh from '@/lib/session'
 import _ from 'lodash'
 import { expect } from 'chai'
-import pictures from '../../../api/pictures'
 
 describe('Warehouse service', function () {
   var data = 'Δευτέρα - Σάββατο 09.00-17.00 Κυριακές & Αργίες Κλειστό'
   var testItem = {
     label: 'Δευτέρα - Σάββατο 09.00-17.00 Κυριακές & Αργίες Κλειστό',
-    data: pictures
+    data: 'test data'
   }
   var newTestItem = {
     label: 'A new test name',

@@ -1,7 +1,6 @@
 /**
  * Mocking client-server processing
  */
-// import pictures from './pictures'
 const pictures = {
   apple: '',
   orange: '',
@@ -14,8 +13,8 @@ const pictures = {
 
 const _products = [
   {
-    "id": 1,
-    "picture": pictures.apple,
+    "id": 0,
+    "picture": '',
     "name": "Apple",
     "price": 40.54,
     "basePrice": 40.54,
@@ -48,26 +47,26 @@ const _products = [
     ]
   },
   {
-    "id": 2,
-    "picture": pictures.orange,
-    "name": "Orange Docen",
+    "id": 1,
+    "picture": '',
+    "name": "Orange Dozen",
     "price": 120.99,
     "basePrice": 120.99,
     "inventory": 5,
     "quantity": 1,
-    "description": "Just one docen of oranges.",
-    "bulk": "docen",
+    "description": "Just one dozen of oranges.",
+    "bulk": "dozen",
     "bulks": [
       {
-        "label": "docen",
+        "label": "dozen",
         "quantity": 12,
         "factor": 11.2
       }
     ]
   },
   {
-    "id": 3,
-    "picture": pictures.tomato,
+    "id": 2,
+    "picture": '',
     "name": "Tomato",
     "price": 19.99,
     "basePrice": 19.99,
@@ -76,8 +75,8 @@ const _products = [
     "description": "Just one tomato."
   },
   {
-    "id": 4,
-    "picture": pictures.blueberry,
+    "id": 3,
+    "picture": '',
     "name": "Blueberry",
     "price": 39.99,
     "basePrice": 39.99,
@@ -86,18 +85,18 @@ const _products = [
     "description": "Some blueberries."
   },
   {
-    "id": 5,
-    "picture": pictures.durian,
+    "id": 4,
+    "picture": '',
     "name": "Durian",
     "price": 19.99,
     "basePrice": 19.99,
     "inventory": 3,
     "quantity": 1,
-    "description": "Hmmm smells weird."
+    "description": "Just one durian."
   },
   {
-    "id": 6,
-    "picture": pictures.dragon,
+    "id": 5,
+    "picture": '',
     "name": "Dragon Fruit",
     "price": 19.99,
     "basePrice": 19.99,
@@ -106,14 +105,64 @@ const _products = [
     "description": "Just one dragon fruit."
   },
   {
-    "id": 7,
-    "picture": pictures.kiwi,
+    "id": 6,
+    "picture": '',
     "name": "Kiwi",
     "price": 19.99,
     "basePrice": 19.99,
     "inventory": 3,
     "quantity": 1,
     "description": "Just one kiwi."
+  },
+  {
+    "id": 7,
+    "picture": '',
+    "name": "Strawberry",
+    "price": 19.99,
+    "basePrice": 19.99,
+    "inventory": 3,
+    "quantity": 1,
+    "description": "Just a few strawberries."
+  },
+  {
+    "id": 8,
+    "picture": '',
+    "name": "Grapes",
+    "price": 19.99,
+    "basePrice": 19.99,
+    "inventory": 3,
+    "quantity": 1,
+    "description": "Just a few grapes."
+  },
+  {
+    "id": 9,
+    "picture": '',
+    "name": "Mango",
+    "price": 19.99,
+    "basePrice": 19.99,
+    "inventory": 3,
+    "quantity": 1,
+    "description": "Just a few mangoes."
+  },
+  {
+    "id": 10,
+    "picture": '',
+    "name": "Watermelon",
+    "price": 19.99,
+    "basePrice": 19.99,
+    "inventory": 3,
+    "quantity": 1,
+    "description": "Just a big watermelon."
+  },
+  {
+    "id": 11,
+    "picture": '',
+    "name": "Passionfruit",
+    "price": 19.99,
+    "basePrice": 19.99,
+    "inventory": 3,
+    "quantity": 1,
+    "description": "Just a Passionfruit."
   }
 ]
 
