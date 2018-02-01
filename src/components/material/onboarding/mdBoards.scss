@@ -99,5 +99,13 @@ $board-max-width: 24px;
     top: 0;
     left: 0;
     right: 0;
+    .floater {
+      position: absolute;
+      bottom: 0;
+      right: 40px;
+      background: rgba(255, 255, 255, 0.8784313725490196);
+      padding: 25px;
+      font-size: 1.5em;
+    }
   }
 }

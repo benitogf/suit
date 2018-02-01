@@ -1,12 +1,12 @@
 import MdCore from '@/components/material/core'
-import MdAvatar from '@/components/material/avatar'
+// import MdAvatar from '@/components/material/avatar'
 import MdBackdrop from '@/components/material/backdrop'
-import MdBottomBar from '@/components/material/bottomBar'
+// import MdBottomBar from '@/components/material/bottomBar'
 import MdButton from '@/components/material/button'
 import MdButtonToggle from '@/components/material/buttonToggle'
 import MdCard from '@/components/material/card'
-import MdCheckbox from '@/components/material/checkbox'
-import MdChips from '@/components/material/chips'
+// import MdCheckbox from '@/components/material/checkbox'
+// import MdChips from '@/components/material/chips'
 import MdDialog from '@/components/material/dialog'
 import MdDivider from '@/components/material/divider'
 import MdFile from '@/components/material/file'
@@ -18,32 +18,32 @@ import MdList from '@/components/material/list'
 import MdMenu from '@/components/material/menu'
 import MdOnboarding from '@/components/material/onboarding'
 import MdProgress from '@/components/material/progress'
-import MdRadio from '@/components/material/radio'
-import MdRatingBar from '@/components/material/ratingBar'
+// import MdRadio from '@/components/material/radio'
+// import MdRatingBar from '@/components/material/ratingBar'
 import MdSelect from '@/components/material/select'
 import MdSidenav from '@/components/material/sidenav'
-import MdSnackbar from '@/components/material/snackbar'
-import MdSpeedDial from '@/components/material/speedDial'
-import MdSpinner from '@/components/material/spinner'
-import MdStepper from '@/components/material/stepper'
+// import MdSnackbar from '@/components/material/snackbar'
+// import MdSpeedDial from '@/components/material/speedDial'
+// import MdSpinner from '@/components/material/spinner'
+// import MdStepper from '@/components/material/stepper'
 import MdSubheader from '@/components/material/subheader'
 import MdSwitch from '@/components/material/switch'
-import MdTable from '@/components/material/table'
+// import MdTable from '@/components/material/table'
 import MdTabs from '@/components/material/tabs'
 import MdToolbar from '@/components/material/toolbar'
-import MdTooltip from '@/components/material/tooltip'
+// import MdTooltip from '@/components/material/tooltip'
 import MdWhiteframe from '@/components/material/whiteframe'
 
 const options = {
   MdCore,
-  MdAvatar,
+  // MdAvatar,
   MdBackdrop,
-  MdBottomBar,
+  // MdBottomBar,
   MdButton,
   MdButtonToggle,
   MdCard,
-  MdCheckbox,
-  MdChips,
+  // MdCheckbox,
+  // MdChips,
   MdDialog,
   MdDivider,
   MdFile,
@@ -55,20 +55,20 @@ const options = {
   MdMenu,
   MdOnboarding,
   MdProgress,
-  MdRadio,
-  MdRatingBar,
+  // MdRadio,
+  // MdRatingBar,
   MdSelect,
   MdSidenav,
-  MdSnackbar,
-  MdSpeedDial,
-  MdSpinner,
-  MdStepper,
+  // MdSnackbar,
+  // MdSpeedDial,
+  // MdSpinner,
+  // MdStepper,
   MdSubheader,
   MdSwitch,
-  MdTable,
+  // MdTable,
   MdTabs,
   MdToolbar,
-  MdTooltip,
+  // MdTooltip,
   MdWhiteframe
 }
 

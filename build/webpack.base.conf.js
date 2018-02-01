@@ -47,12 +47,16 @@ module.exports = {
         loader: ['raw-loader', 'sass-loader']
       },
       {
+        test: /\.svg$/,
+        loader: 'raw-loader'
+      },
+      {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [utils.resolve('src'), utils.resolve('test'), utils.resolve('api')]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif)(\?.*)?$/,
         loader: 'url-loader',
         query: {
           limit: 10000,

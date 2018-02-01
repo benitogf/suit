@@ -9,10 +9,17 @@ import _ from 'lodash'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 import { ImageDrop } from '@/lib/quill/formats/image-drop'
+import { ImageResize } from '@/lib/quill/formats/image-resize'
 
 if (!Quill.imports['modules/imageDrop']) {
   Quill.register({
     'modules/imageDrop': ImageDrop
+  })
+}
+
+if (!Quill.imports['modules/imageResize']) {
+  Quill.register({
+    'modules/imageResize': ImageResize
   })
 }
 
@@ -45,6 +52,9 @@ export default {
       defaultConfig: {
         modules: {
           imageDrop: true,
+          imageResize: {
+            modules: ['Resize', 'DisplaySize', 'Toolbar']
+          },
           toolbar: {
             container: [
               [{ list: 'ordered' }, { list: 'bullet' }, { align: [false, 'center', 'right', 'justify'] }],

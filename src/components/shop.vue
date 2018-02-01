@@ -20,8 +20,18 @@
       </md-dialog-actions>
     </md-dialog>
 
-    <md-whiteframe v-if="isAdmin" md-elevation="0" class="product-admin">
-      <md-layout md-align="end">
+    <md-layout md-column>
+      <md-boards :md-controls="true" :md-auto="true" :md-infinite="true" :md-duration="5000" :md-swipeable="true">
+        <md-board v-for="(board, index) in boards" v-if="products[board]" :id="'slide' + index" :key="index">
+          <md-image v-if="products[board].picture" :md-src="products[board].picture" :alt="products[board].name"></md-image>
+          <i v-else class="material-icons product-board-picture">wallpaper</i>
+          <p class="floater" v-html="products[board].description"></p>
+        </md-board>
+      </md-boards>
+    </md-layout>
+
+    <md-whiteframe md-elevation="0" class="product-admin">
+      <md-layout v-if="isAdmin" md-align="end">
         <md-button v-if="edit" @click="productForm()" class="md-button md-primary">Add product</md-button>
         <md-switch v-model="edit"></md-switch>
       </md-layout>
@@ -43,6 +53,7 @@ export default {
   components: { Product },
   computed: {
     ...mapGetters({
+      boards: 'boards',
       products: 'products',
       isAdmin: 'isAdmin'
     })
@@ -88,6 +99,24 @@ export default {
 <style lang="scss" scoped>
 @import 'src/components/material/core/stylesheets/variables.scss';
 
+.product-board-picture {
+  font-size: 13em;
+  color: #ccc;
+  background-color: rgba(0, 0, 0, .12);
+  width: 100%;
+  height: 1.5em;
+  line-height: 1.5em;
+  text-align: center;
+}
+
+.md-image.md-loaded {
+  width: inherit;
+}
+
+.md-board {
+  max-height: 350px;
+}
+
 .product-admin {
   width: 99%;
   padding-right: 15px;
@@ -97,6 +126,7 @@ export default {
 .shop {
   flex-direction: initial;
 }
+
 .md-menu-content {
   max-height: 300px;
 }
