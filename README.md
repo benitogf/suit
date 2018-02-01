@@ -2,8 +2,8 @@
 
 [![Build Status][build-image]][build-url]
 
-[build-url]: https://travis-ci.com/benitogf/suit
-[build-image]: https://travis-ci.com/benitogf/suit.svg?token=b628aVyTMNXTpbUCmJtn&branch=master&style=flat-square
+[build-url]: https://travis-ci.org/benitogf/suit
+[build-image]: https://travis-ci.org/benitogf/suit.svg?branch=master&style=flat-square
 
 > A Vue.js project based on [vue-material](http://vuematerial.io) please check the [wiki](https://github.com/benitogf/suit/wiki) for more details about the project goals
 
