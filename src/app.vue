@@ -41,6 +41,10 @@
         </router-link>
       </md-toolbar>
 
+      <md-layout md-flex="100" v-if="loading">
+        <md-progress md-indeterminate></md-progress>
+      </md-layout>
+
       <md-list v-if="isAdmin && state !== 'settings'  && !loading">
         <md-list-item>
           <md-layout md-align="end">

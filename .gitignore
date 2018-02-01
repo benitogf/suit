@@ -4,6 +4,7 @@ dist/*
 !dist/hub.js
 dist.zip
 hillary.yml
+deploy.*
 npm-debug.log
 yarn-error.log
 test/unit/coverage

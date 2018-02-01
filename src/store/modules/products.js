@@ -13,11 +13,13 @@ const findNextId = products => {
 // initial state
 const state = {
   all: null,
-  selected: null
+  selected: null,
+  boards: [0, 1, 2, 3]
 }
 
 // getters
 const getters = {
+  boards: state => state.boards,
   products: state => state.all,
   product: state => Array.isArray(state.all) ? state.all.find(product => product.id === state.selected) : null
 }
