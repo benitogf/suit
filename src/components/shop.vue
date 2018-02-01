@@ -104,8 +104,8 @@ export default {
   color: #ccc;
   background-color: rgba(0, 0, 0, .12);
   width: 100%;
-  height: 1.5em;
-  line-height: 1.5em;
+  height: 1.8em;
+  line-height: 1.7em;
   text-align: center;
 }
 
@@ -115,6 +115,7 @@ export default {
 
 .md-board {
   max-height: 350px;
+  height: 350px;
 }
 
 .product-admin {

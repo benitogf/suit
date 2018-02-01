@@ -55,7 +55,7 @@ class ImageResize {
 
     this.modules.forEach(
       (module) => {
-        module.onCreate(this.quill)
+        module.onCreate()
       }
     )
 

@@ -5,8 +5,7 @@ import { BaseModule } from './BaseModule'
 import Quill from 'quill'
 
 export class Toolbar extends BaseModule {
-  onCreate = (quill) => {
-    console.log(quill, Quill.imports)
+  onCreate = () => {
     const Parchment = Quill.imports.parchment
     this.FloatStyle = new Parchment.Attributor.Style('float', 'float')
     this.MarginStyle = new Parchment.Attributor.Style('margin', 'margin')
@@ -61,7 +60,6 @@ export class Toolbar extends BaseModule {
 
   _addToolbarButtons = () => {
     const buttons = []
-    console.log(this)
     this.alignments.forEach((alignment, idx) => {
       const button = document.createElement('span')
       buttons.push(button)
@@ -86,7 +84,6 @@ export class Toolbar extends BaseModule {
       if (idx > 0) {
         button.style.borderLeftWidth = '0'
       }
-      console.log(button)
       Object.assign(button.children[0].style, this.options.toolbarButtonSvgStyles)
       if (alignment.isApplied()) {
         // select button if previously applied
