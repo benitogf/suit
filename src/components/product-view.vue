@@ -3,7 +3,7 @@
     <md-card class="md-default">
       <md-card-content v-if="product && products">
         <md-tabs @change="change" class="products-tabs md-theme-default">
-          <md-tab :md-active="pr.id === product.id" v-for="pr in products" :key="pr.id" :id="pr.id+pr.name" :md-label="pr.name"></md-tab>
+          <md-tab :md-active="pr.id === product.id" v-for="pr in products" :key="pr.id" :id="pr.id.toString()" :md-label="pr.name"></md-tab>
         </md-tabs>
         <product @edit="editToggle" :showActions="false" :edit="edit" :product="product"></product>
       </md-card-content>
@@ -16,6 +16,7 @@ import { mapGetters } from 'vuex'
 import Product from './product.vue'
 
 export default {
+  props: ['id'],
   name: 'ProductView',
   components: { Product },
   computed: {
@@ -26,27 +27,20 @@ export default {
     })
   },
   data: () => ({
-    edit: true,
-    firstLoad: true
+    edit: true
   }),
   methods: {
-    change (e) {
-      if (e !== this.product.id) {
-        if (this.firstLoad) {
-          this.firstLoad = false
-          if (this.product.id < e) {
-            this.$router.push({ name: 'product', params: { id: e } })
-          }
-        } else {
-          this.$router.push({ name: 'product', params: { id: e } })
-        }
+    change (e, what) {
+      let id = parseInt(e.activeTab)
+      if (id !== this.product.id) {
+        this.$router.push({ name: 'product', params: { id } })
       }
     },
     editToggle (e) {
       this.edit = e
     }
   },
-  created () {
+  mounted () {
     // route params don't propagate due to the store filter for the route mutation
     // this.$store.dispatch('getProduct', parseInt(this.$route.params.id))
     this.$store.dispatch('getProduct', parseInt(this.$route.path.replace('/product/', '')))

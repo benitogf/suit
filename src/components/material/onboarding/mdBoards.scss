@@ -94,18 +94,28 @@ $board-max-width: 24px;
   }
 
   .md-board {
+    @media (min-width: $breakpoint-small+1) {
+      max-height: 350px;
+      min-height: 350px;
+    }
     padding: 16px;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
+    .md-image {
+      width: 100%;
+    }
     .floater {
       position: absolute;
-      bottom: 0;
+      top: 15px;
       right: 40px;
       background: rgba(255, 255, 255, 0.8784313725490196);
       padding: 25px;
-      font-size: 1.5em;
+      font-size: 1.3em;
+      font-style: italic;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
   }
 }

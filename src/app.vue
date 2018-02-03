@@ -21,20 +21,24 @@
       <md-button v-if="!loading" class="md-icon-button nav-trigger" @click="toggleSidenav">
         <md-icon md-src="menu">menu</md-icon>
       </md-button>
+
       <h2 class="md-title" :class="{
         'page-title': !loading
       }">{{ title }}</h2>
+
       <md-layout v-if="state !== 'settings' && !loading" md-align="end">
         <md-button class="md-icon-button" @click.native="toggleRightSidenav">
             <i class="material-icons">local_mall</i>
         </md-button>
       </md-layout>
     </md-whiteframe>
+
     <md-layout md-flex="100" v-if="loading">
       <md-progress md-indeterminate></md-progress>
     </md-layout>
 
     <md-sidenav v-if="state !== 'login'" class="nav-sidebar md-left md-fixed" md-swipeable ref="leftSidenav">
+
       <md-toolbar class="logo">
         <router-link exact to="/">
           <md-icon md-src="corsarial"></md-icon>
@@ -83,7 +87,7 @@
 
     </md-sidenav>
 
-    <md-sidenav v-if="state !== 'login' && state !== 'settings' && !loading" class="md-right" ref="rightSidenav">
+    <md-sidenav v-if="state !== 'login' && state !== 'settings' && !loading" md-swipeable class="md-right" ref="rightSidenav">
 
       <md-toolbar class="md-right-close">
         <div class="md-title">
@@ -263,6 +267,7 @@ export default {
   body {
     height: 100%;
     overflow: hidden;
+    font-family: "bahnschrift";
   }
 
   body {
@@ -274,17 +279,7 @@ export default {
     display: flex;
     flex-flow: column nowrap;
     flex: 1;
-    // transition: $swift-ease-out;
   }
-
-  // @media (min-width: $breakpoint-xlarge +1) {
-  //   .content {
-  //     margin-right: $sidenav-width;
-  //   }
-  //   .top-toolbar, .md-right-close {
-  //     display: none !important;
-  //   }
-  // }
 
   code {
     &:not(.hljs) {
@@ -324,7 +319,7 @@ export default {
   }
 
   /* Enter and leave animations can use different */
-  /* durations and timing functions.              */
+  /* durations and timing functions. */
   .slide-fade-enter-active {
     transition: all .5s ease;
   }
