@@ -73,6 +73,7 @@
     mixins: [theme],
     data: () => ({
       tabList: {},
+      firstLoad: true,
       activeTab: null,
       activeTabNumber: 0,
       hasIcons: false,
@@ -264,7 +265,11 @@
         this.activeTab = tabData.id
         this.activeTabNumber = this.getTabIndex(this.activeTab)
         this.calculatePosition()
-        this.$emit('change', this.activeTabNumber)
+        if (!this.firstLoad) {
+          this.$emit('change', { activeTabNumber: this.activeTabNumber, activeTab: this.activeTab })
+        } else {
+          this.firstLoad = false
+        }
       },
       navigationScrollLeft () {
         const { scrollLeft, clientWidth } = this.$refs.tabsContainer

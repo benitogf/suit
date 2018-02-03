@@ -3,6 +3,7 @@ import DefaultOptions from './DefaultOptions'
 import { DisplaySize } from './modules/DisplaySize'
 import { Toolbar } from './modules/Toolbar'
 import { Resize } from './modules/Resize'
+import Quill from 'quill'
 
 // https://github.com/kensnyder/quill-image-resize-module
 const knownModules = { DisplaySize, Toolbar, Resize }
@@ -36,7 +37,7 @@ class ImageResize {
     document.execCommand('enableObjectResizing', false, 'false')
 
     // respond to clicks inside the editor
-    this.quill.root.addEventListener('click', this.handleClick.bind(this), false)
+    this.quill.root.addEventListener('click', this.handleClick, false)
 
     this.quill.root.parentNode.style.position = this.quill.root.parentNode.style.position || 'relative'
 
@@ -81,7 +82,7 @@ class ImageResize {
     this.modules = []
   }
 
-  handleClick (evt) {
+  handleClick = (evt) => {
     if (evt.target && evt.target.tagName && evt.target.tagName.toUpperCase() === 'IMG') {
       if (this.img === evt.target) {
         // we are already focused on this image
@@ -169,7 +170,7 @@ class ImageResize {
   hide = () => {
     this.hideOverlay()
     this.removeModules()
-    this.img = undefined
+    delete this.img
   }
 
   setUserSelect = (value) => {
@@ -188,7 +189,7 @@ class ImageResize {
   checkImage = (evt) => {
     if (this.img) {
       if (evt.keyCode === 46 || evt.keyCode === 8) {
-        window.Quill.find(this.img).deleteAt(0)
+        Quill.find(this.img).deleteAt(0)
       }
       this.hide()
     }

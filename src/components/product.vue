@@ -70,18 +70,18 @@
             <md-textarea v-model="product.description" maxlength="70"></md-textarea>
           </md-input-container>
           <!-- <page v-if="product.page && showActions" :id="product.id.toString()" :page="product.page"></page> -->
-          <div class="md-title vars-title">Extras</div>
+          <div class="md-title">Extras</div>
           <md-layout md-flex v-for="label in extras" :key="label" class="extra">
             <md-list>
               <md-list-item>
-                <b>{{label}}</b>
+                <b class="vars-name">{{label}}</b>
                 <md-layout md-align="end">
                   <md-button md-flex class="md-button md-icon-button md-primary" @click="extraForm(label, null)"><i class="material-icons">add_box</i></md-button>
                 </md-layout>
               </md-list-item>
               <md-divider></md-divider>
               <md-list-item v-for="extra in product[label+'s']" :key="extra.label">
-                <p>{{extra.label}}</p>
+                <p class="vars-name">{{extra.label}}</p>
                 <md-layout md-align="end">
                   <md-button class="md-button md-icon-button md-accent"
                     @click="extraForm(label, extra)"><i class="material-icons">mode_edit</i></md-button>
@@ -241,7 +241,7 @@ export default {
       isAdmin: 'isAdmin'
     }),
     notAvailable () {
-      return this.product.inventory !== -1 && (this.product.inventory === 0 || this.product.quantity > this.product.inventory)
+      return parseInt(this.product.inventory) !== -1 && (parseInt(this.product.inventory) === 0 || parseInt(this.product.quantity) > parseInt(this.product.inventory))
     }
   },
   watch: {
@@ -371,7 +371,6 @@ export default {
 
 .product {
   .product-title {
-    font-size: 15px !important;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
@@ -424,10 +423,14 @@ export default {
 
 .product-description {
   margin: 25px;
+  font-style: italic;
 }
 
 .product-content {
   min-height: 138px;
   padding: 0;
+}
+.vars-name {
+  font-size: .8em;
 }
 </style>

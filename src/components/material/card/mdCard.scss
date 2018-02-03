@@ -43,7 +43,7 @@ $card-radius: 2px;
     }
 
     + .md-card-content:last-child {
-      padding-bottom: 16px;
+      padding-bottom: 36px;
     }
 
     img {
@@ -76,21 +76,6 @@ $card-radius: 2px;
 
     + .md-card-actions:not(:last-child) {
       padding: 0 8px;
-    }
-
-    .md-avatar {
-      margin-right: 16px;
-      float: left;
-
-      ~ .md-title {
-        font-size: 14px;
-      }
-
-      ~ .md-title,
-      ~ .md-subhead {
-        font-weight: 500;
-        line-height: 20px;
-      }
     }
 
     .md-button {
@@ -144,7 +129,7 @@ $card-radius: 2px;
 
   .md-subhead {
     opacity: .54;
-    font-size: 14px;
+    font-size: 1.1em;
     letter-spacing: .01em;
     line-height: 20px;
 
@@ -154,7 +139,7 @@ $card-radius: 2px;
   }
 
   .md-title {
-    font-size: 24px;
+    font-size: 1.1em;
     letter-spacing: 0;
     line-height: 32px;
   }
@@ -186,7 +171,7 @@ $card-radius: 2px;
 
   .md-card-content {
     padding: 16px;
-    font-size: 14px;
+    font-size: 1.1em;
     line-height: 22px;
 
     &:last-child {

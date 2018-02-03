@@ -23,9 +23,11 @@
     <md-layout md-column>
       <md-boards :md-controls="true" :md-auto="true" :md-infinite="true" :md-duration="5000" :md-swipeable="true">
         <md-board v-for="(board, index) in boards" v-if="products[board]" :id="'slide' + index" :key="index">
-          <md-image v-if="products[board].picture" :md-src="products[board].picture" :alt="products[board].name"></md-image>
-          <i v-else class="material-icons product-board-picture">wallpaper</i>
-          <p class="floater" v-html="products[board].description"></p>
+          <router-link exact :to="'/product/' + products[board].id">
+            <md-image v-if="products[board].picture" :md-src="products[board].picture" :alt="products[board].name"></md-image>
+            <i v-else class="material-icons product-board-picture">wallpaper</i>
+            <p class="floater" v-html="products[board].description"></p>
+          </router-link>
         </md-board>
       </md-boards>
     </md-layout>
@@ -113,11 +115,6 @@ export default {
   width: inherit;
 }
 
-.md-board {
-  max-height: 350px;
-  height: 350px;
-}
-
 .product-admin {
   width: 99%;
   padding-right: 15px;
@@ -126,10 +123,6 @@ export default {
 
 .shop {
   flex-direction: initial;
-}
-
-.md-menu-content {
-  max-height: 300px;
 }
 
 .md-card {

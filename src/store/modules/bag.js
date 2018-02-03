@@ -38,26 +38,30 @@ const actions = {
 const mutations = {
   [types.ADD_TO_BAG] (state, { id, variant, bulk, price, quantity }) {
     const record = findRecord(state, id, variant, bulk)
-    if (record === -1) {
-      state.added.push({
-        id,
-        variant,
-        bulk,
-        price,
-        bulkQuantity: quantity,
-        quantity
-      })
-    } else {
-      state.added[record].quantity += quantity
+    let newq = quantity
+    if (record !== -1) {
+      newq = parseInt(state.added[record].quantity) + parseInt(quantity)
+      state.added.splice(record, 1)
     }
+    state.added.unshift({
+      id,
+      variant,
+      bulk,
+      price,
+      bulkQuantity: quantity,
+      quantity: newq
+    })
   },
 
   [types.REMOVE_FROM_BAG] (state, { id, variant, bulk, price, quantity }) {
     const record = findRecord(state, id, variant, bulk)
-    if (state.added[record].bulkQuantity === quantity) {
+    if (parseInt(state.added[record].bulkQuantity) === parseInt(quantity)) {
       state.added.splice(record, 1)
     } else {
-      state.added[record].quantity -= state.added[record].bulkQuantity
+      let aux = {...state.added[record]}
+      aux.quantity -= parseInt(aux.bulkQuantity)
+      state.added.splice(record, 1)
+      state.added.unshift(aux)
     }
   },
 

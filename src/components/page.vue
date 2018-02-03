@@ -159,6 +159,13 @@ export default {
   watch: {
     'edit': function () {
       this.$emit('edit', this.edit)
+    },
+    'id': function () {
+      this.loading = true
+      this.$store.dispatch('getPage', this.id)
+      this.$nextTick(() => {
+        this.loading = false
+      })
     }
   },
   mounted () {

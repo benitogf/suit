@@ -154,12 +154,6 @@
     @media (min-width: $breakpoint-xlarge + 1) {
       width: 430px;
     }
-    // @media (min-width: $breakpoint-xlarge + 1) {
-    //   top: 0;
-    //   pointer-events: auto;
-    //   transform: translate3d(0, 0, 0) !important;
-    //   box-shadow: $material-shadow-2dp;
-    // }
   }
 
   &.md-fixed {
@@ -217,10 +211,6 @@
 
 .md-backdrop {
   background-color: rgba(249, 249, 249, 0.87);
-  // @media (min-width: $breakpoint-xlarge) {
-  //   opacity: 0 !important;
-  //   pointer-events: none !important;
-  // }
 }
 
 .md-toolbar {
@@ -228,7 +218,7 @@
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 1.8em;
   width: 100%;
   .md-icon {
     width: 111px;
@@ -253,20 +243,6 @@
   img {
     width: 160px;
     margin-bottom: 16px;
-  }
-}
-
-.sidenav-links {
-  overflow: auto;
-  flex: 1;
-
-  .md-inset .md-list-item-container {
-    padding-left: 36px;
-  }
-
-  .md-list-item-container {
-    font-size: 14px;
-    font-weight: 500;
   }
 }
 </style>

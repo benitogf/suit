@@ -53,7 +53,7 @@ export default {
         modules: {
           imageDrop: true,
           imageResize: {
-            modules: ['Resize', 'DisplaySize', 'Toolbar']
+            modules: ['Resize', 'DisplaySize']
           },
           toolbar: {
             container: [
@@ -155,6 +155,7 @@ export default {
     }
   }
   .ql-container {
+    font-family: inherit;
     height: calc(100% -40px);
     border: none;
     border: none !important;
@@ -178,7 +179,8 @@ export default {
     background: rgba(0, 150, 136, 0.69);
   }
   .ql-editor {
-    font-size: 18px;
+    font-size: 1.3em;
+    font-weight: lighter;
     overflow-y: scroll;
     padding: 12px 15px 15px 15px;
     // box-shadow: 0px 1.6px 10.6px rgba(221, 221, 221, 0.71);
